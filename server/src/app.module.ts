@@ -1,19 +1,25 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import appConfig from './config/app-config';
+import databaseConfig from './database/config/database-config';
 import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
+import { RoleModule } from './role/role.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    DatabaseModule,
-    LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().required(),
-      }),
+      load: [appConfig, databaseConfig],
+      envFilePath: ['.env'],
     }),
+    DatabaseModule,
+    LoggerModule,
+    AuthModule,
+    UserModule,
+    RoleModule,
   ],
 })
 export class AppModule {}
