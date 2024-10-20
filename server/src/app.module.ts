@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import authConfig from './auth/config/auth.config';
 import appConfig from './config/app-config';
 import databaseConfig from './database/config/database-config';
 import { DatabaseModule } from './database/database.module';
@@ -12,7 +13,7 @@ import { UserModule } from './user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, authConfig],
       envFilePath: ['.env'],
     }),
     DatabaseModule,

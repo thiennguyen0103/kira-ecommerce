@@ -43,7 +43,7 @@ export class UserDocument extends AbstractDocument {
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'Role',
+    ref: RoleDocument.name,
   })
   role: RoleDocument;
 
