@@ -1,10 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { now, Types } from 'mongoose';
+import { Exclude } from 'class-transformer';
+import { HydratedDocument } from 'mongoose';
 import { AbstractDocument } from 'src/database/abstract.schema';
 import { RoleDocument } from 'src/role/entities/role.schema';
+import { RoleSchema } from './../../role/entities/role.schema';
+
+export type UserDocumentType = HydratedDocument<UserDocument>;
 
 @Schema({
-  timestamps: true,
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
   toJSON: {
     virtuals: true,
     getters: true,
@@ -42,16 +49,11 @@ export class UserDocument extends AbstractDocument {
   isActive: boolean;
 
   @Prop({
-    type: Types.ObjectId,
+    type: RoleSchema,
     ref: RoleDocument.name,
+    required: true,
   })
   role: RoleDocument;
-
-  @Prop({ default: now })
-  createdAt: Date;
-
-  @Prop({ default: now })
-  updatedAt: Date;
 
   @Prop()
   deletedAt: Date;

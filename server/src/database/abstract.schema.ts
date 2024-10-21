@@ -1,8 +1,19 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { SchemaTypes, Types } from 'mongoose';
+import { Schema } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
 
 @Schema()
 export class AbstractDocument {
-  @Prop({ type: SchemaTypes.ObjectId })
-  _id: Types.ObjectId;
+  @Transform(
+    (value) => {
+      if ('value' in value) {
+        return value.obj[value.key].toString();
+      }
+
+      return 'unknown value';
+    },
+    {
+      toPlainOnly: true,
+    },
+  )
+  public _id: string;
 }

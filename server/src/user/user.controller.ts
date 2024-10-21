@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  SerializeOptions,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';

@@ -7,7 +7,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
-import { Types } from 'mongoose';
 import { RoleDocument } from 'src/role/entities/role.schema';
 import { UserService } from 'src/user/user.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
@@ -75,10 +74,7 @@ export class AuthService {
     };
   }
 
-  private async getTokensData(data: {
-    id: Types.ObjectId;
-    role: RoleDocument;
-  }) {
+  private async getTokensData(data: { id: string; role: RoleDocument }) {
     const tokenExpiresIn = this.configService.getOrThrow('auth.expires', {
       infer: true,
     });
