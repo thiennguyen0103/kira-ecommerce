@@ -28,10 +28,6 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
-  // app.useGlobalInterceptors(
-  //   new ResolvePromisesInterceptor(),
-  //   new ClassSerializerInterceptor(app.get(Reflector)),
-  // );
 
   const config = new DocumentBuilder()
     .setTitle('Ecommerce API')

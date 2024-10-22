@@ -74,7 +74,12 @@ export class AuthService {
       secure: false,
     });
 
-    return this.mapper.map(user, UserDocument, UserResponseDto);
+    return {
+      refreshToken,
+      token,
+      tokenExpires,
+      user: this.mapper.map(user, UserDocument, UserResponseDto),
+    };
   }
 
   private async getTokensData(data: { id: string; role: RoleDocument }) {

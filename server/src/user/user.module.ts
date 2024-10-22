@@ -6,9 +6,11 @@ import { UserController } from './user.controller';
 import { UserProfile } from './user.profile';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
+import { LoggerModule } from 'src/logger/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     DatabaseModule,
     DatabaseModule.forFeature([
       { name: UserDocument.name, schema: UserSchema },

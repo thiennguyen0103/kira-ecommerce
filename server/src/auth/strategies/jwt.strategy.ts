@@ -21,10 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (
       req.cookies &&
       'accessToken' in req.cookies &&
-      req.cookies.user_token.length > 0
+      req.cookies.accessToken.length > 0
     ) {
-      return req.cookies['accessToken'];
+      return req.cookies.accessToken;
     }
+    return null;
   }
 
   async validate(payload: any) {

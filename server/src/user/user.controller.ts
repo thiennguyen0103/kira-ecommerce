@@ -8,10 +8,15 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/utils/decorators/role.decorator';
+import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -22,7 +27,9 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Roles(RoleEnum.Admin)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOkResponse({
     type: UserResponseDto,
   })
@@ -46,7 +53,11 @@ export class UserController {
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserResponseDto> {
+  findOne(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ): Promise<UserResponseDto> {
+    console.log(req.user);
     return this.userService.findOne(id);
   }
 
