@@ -43,10 +43,13 @@ export class UserService {
       });
     }
 
+    const salt = await bcrypt.genSalt();
+    const password = await bcrypt.hash(createUserDto.password, salt);
+
     const user = await this.userRepository.create({
       ...createUserDto,
       isActive: true,
-      password: await bcrypt.hash(createUserDto.password, 10),
+      password: password,
       role: clientRole,
     });
 

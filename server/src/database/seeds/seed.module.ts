@@ -5,10 +5,12 @@ import appConfig from 'src/config/app-config';
 import databaseConfig from '../config/database-config';
 import { MongooseConfigService } from '../mongoose-config.service';
 import { RoleSeedModule } from './role/role-seed.module';
+import { UserSeedModule } from './user/user-seed.module';
 
 @Module({
   imports: [
     RoleSeedModule,
+    UserSeedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, appConfig],
