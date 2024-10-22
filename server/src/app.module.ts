@@ -1,3 +1,6 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
+import { pojos } from '@automapper/pojos';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +19,9 @@ import { UserModule } from './user/user.module';
       load: [appConfig, databaseConfig, authConfig],
       envFilePath: ['.env'],
     }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+  }),
     DatabaseModule,
     LoggerModule,
     AuthModule,

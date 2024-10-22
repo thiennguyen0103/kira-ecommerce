@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from 'src/database/database.module';
 import { RoleDocument, RoleSchema } from './entities/role.schema';
 import { RoleController } from './role.controller';
+import { RoleProfile } from './role.profile';
 import { RoleRepository } from './role.repository';
 import { RoleService } from './role.service';
 
@@ -16,7 +17,7 @@ import { RoleService } from './role.service';
     ]),
   ],
   controllers: [RoleController],
-  providers: [RoleService, RoleRepository],
+  providers: [RoleService, RoleRepository, RoleProfile],
   exports: [RoleService],
 })
 export class RoleModule {}

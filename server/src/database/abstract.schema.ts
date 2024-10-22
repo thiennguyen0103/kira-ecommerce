@@ -1,5 +1,7 @@
-import { Schema } from '@nestjs/mongoose';
+import { AutoMap } from '@automapper/classes';
+import { Prop, Schema } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
+import { now } from 'mongoose';
 
 @Schema()
 export class AbstractDocument {
@@ -16,4 +18,12 @@ export class AbstractDocument {
     },
   )
   public _id: string;
+
+  @AutoMap()
+  @Prop({ default: now })
+  createdAt: Date;
+
+  @AutoMap()
+  @Prop({ default: now })
+  updatedAt: Date;
 }

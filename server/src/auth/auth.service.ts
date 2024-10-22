@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   HttpStatus,
   Injectable,
@@ -8,6 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { RoleDocument } from 'src/role/entities/role.schema';
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
+import { UserDocument } from 'src/user/entities/user.schema';
 import { UserService } from 'src/user/user.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { AuthLoginDto } from './dto/auth-login.dto';
@@ -16,6 +20,7 @@ import { AuthRegisterDto } from './dto/auth-register.dto';
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectMapper() private readonly mapper: Mapper,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
@@ -69,9 +74,7 @@ export class AuthService {
       secure: false,
     });
 
-    return {
-      user,
-    };
+    return this.mapper.map(user, UserDocument, UserResponseDto);
   }
 
   private async getTokensData(data: { id: string; role: RoleDocument }) {

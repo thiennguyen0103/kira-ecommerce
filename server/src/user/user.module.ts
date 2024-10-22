@@ -3,6 +3,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { RoleModule } from 'src/role/role.module';
 import { UserDocument, UserSchema } from './entities/user.schema';
 import { UserController } from './user.controller';
+import { UserProfile } from './user.profile';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
@@ -15,7 +16,7 @@ import { UserService } from './user.service';
     RoleModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository],
+  providers: [UserService, UserRepository, UserProfile],
   exports: [UserService],
 })
 export class UserModule {}

@@ -1,5 +1,5 @@
+import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
 import { HydratedDocument } from 'mongoose';
 import { AbstractDocument } from 'src/database/abstract.schema';
 import { RoleDocument } from 'src/role/entities/role.schema';
@@ -8,22 +8,20 @@ import { RoleSchema } from './../../role/entities/role.schema';
 export type UserDocumentType = HydratedDocument<UserDocument>;
 
 @Schema({
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  },
   toJSON: {
     virtuals: true,
     getters: true,
   },
 })
 export class UserDocument extends AbstractDocument {
+  @AutoMap()
   @Prop({
     type: String,
     required: true,
   })
   name: string;
 
+  @AutoMap()
   @Prop({
     type: String,
     required: true,
@@ -37,17 +35,20 @@ export class UserDocument extends AbstractDocument {
   })
   password: string;
 
+  @AutoMap()
   @Prop({
     type: String,
   })
   image?: string | null;
 
+  @AutoMap()
   @Prop({
     type: Boolean,
     default: true,
   })
   isActive: boolean;
 
+  @AutoMap(() => RoleDocument)
   @Prop({
     type: RoleSchema,
     ref: RoleDocument.name,
@@ -55,6 +56,7 @@ export class UserDocument extends AbstractDocument {
   })
   role: RoleDocument;
 
+  @AutoMap()
   @Prop()
   deletedAt: Date;
 }

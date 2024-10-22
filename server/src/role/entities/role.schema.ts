@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { AbstractDocument } from 'src/database/abstract.schema';
@@ -13,6 +14,7 @@ export type RoleDocumentType = HydratedDocument<RoleDocument>;
   },
 })
 export class RoleDocument extends AbstractDocument {
+  @AutoMap()
   @Prop({
     type: String,
     required: true,

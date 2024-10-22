@@ -1,25 +1,26 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   HttpStatus,
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Model } from 'mongoose';
 import { RoleService } from 'src/role/role.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { UserDocument } from './entities/user.schema';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
+    @InjectMapper()
+    private readonly mapper: Mapper,
     private readonly userRepository: UserRepository,
     private readonly roleService: RoleService,
-    @InjectModel(UserDocument.name)
-    private readonly model: Model<UserDocument>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -42,20 +43,31 @@ export class UserService {
       });
     }
 
-    return this.userRepository.create({
+    const user = await this.userRepository.create({
       ...createUserDto,
       isActive: true,
       password: await bcrypt.hash(createUserDto.password, 10),
       role: clientRole,
     });
+
+    if (!user) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'User cannot created',
+      });
+    }
+
+    return this.mapper.map(user, UserDocument, UserResponseDto);
   }
 
-  findAll() {
-    return this.userRepository.find({});
+  async findAll() {
+    const users = await this.userRepository.find({});
+
+    return this.mapper.mapArray(users, UserDocument, UserResponseDto);
   }
 
-  findOne(id: string) {
-    return this.userRepository.findOne(
+  async findOne(id: string): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOne(
       {
         _id: id,
       },
@@ -63,6 +75,15 @@ export class UserService {
         path: 'role',
       },
     );
+
+    if (!user) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'User not found',
+      });
+    }
+
+    return this.mapper.map(user, UserDocument, UserResponseDto);
   }
 
   findOneByEmail(email: string) {
