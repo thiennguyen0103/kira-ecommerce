@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
     RoleModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}

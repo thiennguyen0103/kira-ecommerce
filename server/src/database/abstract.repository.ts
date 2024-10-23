@@ -43,7 +43,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   }
 
   async find(
-    filterQuery: FilterQuery<TDocument>,
+    filterQuery?: FilterQuery<TDocument>,
     populateOptions?: PopulateOptions | PopulateOptions[],
     useLean = false,
   ): Promise<TDocument[]> {
