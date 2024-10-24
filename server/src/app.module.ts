@@ -12,6 +12,7 @@ import { LoggerModule } from './logger/logger.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     RoleModule,
     CategoryModule,
+    ProductModule,
   ],
 })
 export class AppModule {}

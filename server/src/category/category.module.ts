@@ -20,6 +20,6 @@ import { CategoryDocument, CategorySchema } from './entities/category.entity';
   ],
   controllers: [CategoryController],
   providers: [CategoryService, CategoryRepository, CategoryProfile],
-  exports: [CategoryService],
+  exports: [CategoryService, CategoryRepository],
 })
 export class CategoryModule {}

@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { RoleService } from 'src/role/role.service';
-import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -35,8 +34,8 @@ export class UserService {
       });
     }
 
-    const clientRole = await this.roleService.findOneByName(RoleEnum.Client);
-    if (!clientRole) {
+    const role = await this.roleService.findOneByName(createUserDto.role);
+    if (!role) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
         message: 'User cannot created',
@@ -50,7 +49,7 @@ export class UserService {
       ...createUserDto,
       isActive: true,
       password: password,
-      role: clientRole,
+      role,
     });
 
     if (!user) {
