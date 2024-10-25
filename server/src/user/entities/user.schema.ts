@@ -25,7 +25,6 @@ export class UserDocument extends AbstractDocument {
   @Prop({
     type: String,
     required: true,
-    unique: true,
   })
   email: string;
 

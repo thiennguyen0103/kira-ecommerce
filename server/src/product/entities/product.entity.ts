@@ -1,11 +1,9 @@
 import { AutoMap } from '@automapper/classes';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {
-  CategoryDocument,
-  CategorySchema,
-} from 'src/category/entities/category.entity';
+import { Types } from 'mongoose';
+import { CategoryDocument } from 'src/category/entities/category.entity';
 import { AbstractDocument } from 'src/database/abstract.schema';
-import { UserDocument, UserSchema } from 'src/user/entities/user.schema';
+import { UserDocument } from 'src/user/entities/user.schema';
 
 @Schema({
   toJSON: {
@@ -37,7 +35,6 @@ export class ProductDocument extends AbstractDocument {
   @Prop({
     type: String,
     required: true,
-    unique: true,
   })
   slug: string;
 
@@ -58,7 +55,7 @@ export class ProductDocument extends AbstractDocument {
 
   @AutoMap()
   @Prop({
-    type: CategorySchema,
+    type: Types.ObjectId,
     ref: CategoryDocument.name,
     required: true,
   })
@@ -66,7 +63,7 @@ export class ProductDocument extends AbstractDocument {
 
   @AutoMap()
   @Prop({
-    type: UserSchema,
+    type: Types.ObjectId,
     ref: UserDocument.name,
     required: true,
   })
@@ -87,3 +84,8 @@ export class ProductDocument extends AbstractDocument {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(ProductDocument);
+
+ProductSchema.index({
+  name: 'text',
+  description: 'text',
+});
