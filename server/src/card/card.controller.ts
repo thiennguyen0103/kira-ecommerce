@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/utils/decorators/role.decorator';
@@ -21,6 +21,7 @@ import { UpdateCardDto } from './dto/update-card.dto';
 @ApiBearerAuth()
 @Roles(RoleEnum.Client)
 @UseGuards(JwtAuthGuard, RoleGuard)
+@ApiTags('Card')
 @Controller('card')
 export class CardController {
   constructor(private readonly cardService: CardService) {}

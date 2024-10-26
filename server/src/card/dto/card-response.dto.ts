@@ -12,13 +12,19 @@ export class CardResponseDto {
   @ApiResponseProperty({
     type: ProductResponseDto,
   })
-  category: ProductResponseDto;
+  product: ProductResponseDto;
 
   @AutoMap(() => UserResponseDto)
   @ApiResponseProperty({
     type: UserResponseDto,
   })
   user: UserResponseDto;
+
+  @AutoMap()
+  @ApiResponseProperty({
+    type: Number,
+  })
+  quantity: number;
 
   @AutoMap()
   @ApiResponseProperty({

@@ -62,11 +62,13 @@ export class CardService {
         quantity: cardItem.quantity + addToCardDto.quantity,
       });
     } else {
-      card = this.cardRepository.create({
-        productId: product.id,
-        userId: user.id,
-        quantity: addToCardDto.quantity,
-      });
+      card = await this.cardRepository.save(
+        this.cardRepository.create({
+          productId: product.id,
+          userId: user.id,
+          quantity: addToCardDto.quantity,
+        }),
+      );
     }
 
     return this.mapper.map(card, CardEntity, CardResponseDto);
