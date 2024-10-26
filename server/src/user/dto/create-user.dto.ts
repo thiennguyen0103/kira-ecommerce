@@ -8,6 +8,7 @@ import {
   IsUUID,
   MinLength,
 } from 'class-validator';
+import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
 export class CreateUserDto {
@@ -34,6 +35,5 @@ export class CreateUserDto {
 
   @ApiPropertyOptional({ type: String })
   @IsUUID()
-  @IsOptional()
   roleId: string;
 }

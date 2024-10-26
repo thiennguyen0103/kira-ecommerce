@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { CategoryEntity } from 'src/category/entities/category.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({
   name: 'product',
@@ -48,12 +48,24 @@ export class ProductEntity extends AbstractEntity {
   })
   rating: number;
 
+  @Column({
+    type: 'uuid',
+  })
+  categoryId: string;
+
   @AutoMap()
   @ManyToOne(() => CategoryEntity, { eager: true })
+  @JoinColumn({ name: 'categoryId' })
   category: CategoryEntity;
+
+  @Column({
+    type: 'uuid',
+  })
+  sellerId: string;
 
   @AutoMap()
   @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'sellerId' })
   seller: UserEntity;
 
   @AutoMap()

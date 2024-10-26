@@ -12,6 +12,10 @@ export class RoleService {
     });
   }
 
+  findById(id: string) {
+    return this.roleRepository.findById(id);
+  }
+
   findByName(name: RoleEnum) {
     return this.roleRepository.findByName(name);
   }

@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
-import { CategoryEntity } from 'src/category/entities/category.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { CategoryService } from 'src/category/category.service';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
@@ -18,18 +18,15 @@ import { ProductEntity } from './entities/product.entity';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectMapper() private readonly mapper: Mapper,
+    @InjectMapper()
+    private readonly mapper: Mapper,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
+    private readonly userService: UserService,
+    private readonly categoryService: CategoryService,
   ) {}
   async create(createProductDto: CreateProductDto, sellerId: string) {
-    const seller = await this.userRepository.findOne({
-      where: { id: sellerId },
-    });
+    const seller = await this.userService.findById(sellerId);
 
     if (!seller) {
       throw new UnprocessableEntityException({
@@ -38,11 +35,9 @@ export class ProductService {
       });
     }
 
-    const category = await this.categoryRepository.findOne({
-      where: {
-        id: createProductDto.categoryId,
-      },
-    });
+    const category = await this.categoryService.findById(
+      createProductDto.categoryId,
+    );
 
     if (!category) {
       throw new UnprocessableEntityException({
@@ -57,8 +52,8 @@ export class ProductService {
         slug: (
           createProductDto?.slug || slugify(createProductDto.name)
         ).toLowerCase(),
-        seller,
-        category,
+        sellerId,
+        categoryId: category.id,
       }),
     );
 

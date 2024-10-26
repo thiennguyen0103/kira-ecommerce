@@ -5,10 +5,8 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { RoleEntity } from 'src/role/entities/role.entity';
-import { Repository } from 'typeorm';
+import { RoleService } from 'src/role/role.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -20,8 +18,7 @@ export class UserService {
     @InjectMapper()
     private readonly mapper: Mapper,
     private readonly userRepository: UserRepository,
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>,
+    private readonly roleRepository: RoleService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -40,9 +37,7 @@ export class UserService {
       });
     }
 
-    const role = await this.roleRepository.findOne({
-      where: { id: createUserDto.roleId },
-    });
+    const role = await this.roleRepository.findById(createUserDto.roleId);
     if (!role) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -56,7 +51,7 @@ export class UserService {
 
     const user = await this.userRepository.create({
       ...clonedPayload,
-      role,
+      roleId: role.id,
     });
 
     if (!user) {
@@ -74,7 +69,7 @@ export class UserService {
     return this.mapper.mapArray(users, UserEntity, UserResponseDto);
   }
 
-  async findOne(id: string): Promise<UserResponseDto> {
+  async findById(id: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findById(id);
 
     if (!user) {

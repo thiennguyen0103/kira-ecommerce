@@ -58,7 +58,7 @@ export class UserController {
     @Param('id') id: string,
   ): Promise<UserResponseDto> {
     console.log(req.user);
-    return this.userService.findOne(id);
+    return this.userService.findById(id);
   }
 
   @ApiOkResponse({

@@ -18,6 +18,7 @@ import { UserService } from 'src/user/user.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class AuthService {
@@ -26,11 +27,11 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    private readonly roleRepository: RoleRepository,
+    private readonly roleService: RoleService,
   ) {}
 
   async register(authRegisterDto: AuthRegisterDto, roleName: RoleEnum) {
-    const existingRole = await this.roleRepository.findByName(roleName);
+    const existingRole = await this.roleService.findByName(roleName);
 
     if (!existingRole) {
       throw new UnprocessableEntityException({
