@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from 'src/config/app-config';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import databaseConfig from '../config/database-config';
-import { MongooseConfigService } from '../mongoose-config.service';
+import { TypeOrmConfigService } from '../typeorm-config.service';
 import { RoleSeedModule } from './role/role-seed.module';
 import { UserSeedModule } from './user/user-seed.module';
 
@@ -16,8 +17,11 @@ import { UserSeedModule } from './user/user-seed.module';
       load: [databaseConfig, appConfig],
       envFilePath: ['.env'],
     }),
-    MongooseModule.forRootAsync({
-      useClass: MongooseConfigService,
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+      dataSourceFactory: async (options: DataSourceOptions) => {
+        return new DataSource(options).initialize();
+      },
     }),
   ],
 })

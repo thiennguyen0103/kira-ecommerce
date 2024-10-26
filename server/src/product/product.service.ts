@@ -5,25 +5,31 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
-import { CategoryRepository } from 'src/category/category.repository';
-import { UserRepository } from './../user/user.repository';
+import { CategoryEntity } from 'src/category/entities/category.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ProductDocument } from './entities/product.entity';
-import { ProductRepository } from './product.repository';
+import { ProductEntity } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    private readonly productRepository: ProductRepository,
-    private readonly userRepository: UserRepository,
-    private readonly categoryRepository: CategoryRepository,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(CategoryEntity)
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
   async create(createProductDto: CreateProductDto, sellerId: string) {
-    const seller = await this.userRepository.findOne({ _id: sellerId });
+    const seller = await this.userRepository.findOne({
+      where: { id: sellerId },
+    });
 
     if (!seller) {
       throw new UnprocessableEntityException({
@@ -33,7 +39,9 @@ export class ProductService {
     }
 
     const category = await this.categoryRepository.findOne({
-      _id: createProductDto.categoryId,
+      where: {
+        id: createProductDto.categoryId,
+      },
     });
 
     if (!category) {
@@ -43,31 +51,27 @@ export class ProductService {
       });
     }
 
-    const product = await this.productRepository.create({
-      ...createProductDto,
-      slug: (
-        createProductDto?.slug || slugify(createProductDto.name)
-      ).toLowerCase(),
-      seller,
-      category,
-    });
+    const product = await this.productRepository.save(
+      this.productRepository.create({
+        ...createProductDto,
+        slug: (
+          createProductDto?.slug || slugify(createProductDto.name)
+        ).toLowerCase(),
+        seller,
+        category,
+      }),
+    );
 
-    return this.mapper.map(product, ProductDocument, ProductResponseDto);
+    return this.mapper.map(product, ProductEntity, ProductResponseDto);
   }
 
   async findAll() {
-    const products = await this.productRepository.find({}, [
-      { path: 'seller' },
-      { path: 'category' },
-    ]);
-    return this.mapper.mapArray(products, ProductDocument, ProductResponseDto);
+    const products = await this.productRepository.find();
+    return this.mapper.mapArray(products, ProductEntity, ProductResponseDto);
   }
 
   async findOneBySlug(slug: string) {
-    const product = await this.productRepository.findOne({ slug }, [
-      { path: 'seller' },
-      { path: 'category' },
-    ]);
+    const product = await this.productRepository.findOne({ where: { slug } });
 
     if (!product) {
       throw new UnprocessableEntityException({
@@ -76,24 +80,36 @@ export class ProductService {
       });
     }
 
-    return this.mapper.map(product, ProductDocument, ProductResponseDto);
+    return this.mapper.map(product, ProductEntity, ProductResponseDto);
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const product = await this.productRepository.findOneAndUpdate(
-      { _id: id },
-      {
-        ...updateProductDto,
-        slug: slugify(updateProductDto.name).toLowerCase(),
-      },
-    );
-    return this.mapper.map(product, ProductDocument, ProductResponseDto);
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Product not found',
+      });
+    }
+
+    const updatedProduct = await this.productRepository.save({
+      ...product,
+      ...updateProductDto,
+    });
+    return this.mapper.map(updatedProduct, ProductEntity, ProductResponseDto);
   }
 
   async remove(id: string) {
-    const product = await this.productRepository.findOneAndDelete({
-      _id: id,
-    });
-    return this.mapper.map(product, ProductDocument, ProductResponseDto);
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Product not found',
+      });
+    }
+    const deletedProduct = await this.productRepository.remove(product);
+    return this.mapper.map(deletedProduct, ProductEntity, ProductResponseDto);
   }
 }

@@ -1,37 +1,27 @@
 import { AutoMap } from '@automapper/classes';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { AbstractDocument } from 'src/database/abstract.schema';
+import { AbstractEntity } from 'src/database/abstract.entity';
+import { Column, Entity, Index } from 'typeorm';
 
-@Schema({
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
+@Entity({
+  name: 'category',
 })
-export class CategoryDocument extends AbstractDocument {
+export class CategoryEntity extends AbstractEntity {
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
-    required: true,
   })
+  @Index()
   name: string;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
   })
   image?: string | null;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
-    required: true,
   })
   slug: string;
 }
-
-export const CategorySchema = SchemaFactory.createForClass(CategoryDocument);
-
-CategorySchema.index({
-  name: 'text',
-});

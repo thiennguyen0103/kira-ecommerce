@@ -1,38 +1,38 @@
 import { AutoMap } from '@automapper/classes';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { AbstractDocument } from 'src/database/abstract.schema';
-import { ProductDocument } from 'src/product/entities/product.entity';
-import { UserDocument, UserSchema } from 'src/user/entities/user.schema';
+import { AbstractEntity } from 'src/database/abstract.entity';
+import { ProductEntity } from 'src/product/entities/product.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-@Schema({
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
+@Entity({
+  name: 'card',
 })
-export class CardDocument extends AbstractDocument {
-  @AutoMap()
-  @Prop({
-    type: ProductDocument,
-    ref: ProductDocument.name,
-    required: true,
+export class CardEntity extends AbstractEntity {
+  @Column({
+    type: 'uuid',
   })
-  product: ProductDocument;
+  productId: string;
 
   @AutoMap()
-  @Prop({
-    type: UserSchema,
-    ref: UserDocument.name,
-    required: true,
+  @ManyToOne(() => ProductEntity, {
+    eager: true,
   })
-  user: UserDocument;
+  @JoinColumn({ name: 'productId' })
+  product: ProductEntity;
+
+  @Column({
+    type: 'uuid',
+  })
+  userId: string;
 
   @AutoMap()
-  @Prop({
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'userId' })
+  user: UserEntity;
+
+  @AutoMap()
+  @Column({
     type: Number,
-    required: true,
   })
   quantity: number;
 }
-
-export const CardSchema = SchemaFactory.createForClass(CardDocument);

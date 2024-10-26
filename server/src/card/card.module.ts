@@ -1,28 +1,25 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from 'src/database/database.module';
 import { LoggerModule } from 'src/logger/logger.module';
+import { ProductEntity } from 'src/product/entities/product.entity';
 import { ProductModule } from 'src/product/product.module';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { UserModule } from 'src/user/user.module';
 import { CardController } from './card.controller';
-import { CardRepository } from './card.repository';
+import { CardProfile } from './card.profile';
 import { CardService } from './card.service';
-import { CardDocument, CardSchema } from './entities/card.entity';
+import { CardEntity } from './entities/card.entity';
 
 @Module({
   imports: [
     LoggerModule,
     DatabaseModule,
-    DatabaseModule.forFeature([
-      {
-        name: CardDocument.name,
-        schema: CardSchema,
-      },
-    ]),
+    DatabaseModule.forFeature([CardEntity, UserEntity, ProductEntity]),
     ProductModule,
     UserModule,
   ],
   controllers: [CardController],
-  providers: [CardService, CardRepository],
-  exports: [CardService, CardRepository],
+  providers: [CardService, CardProfile],
+  exports: [CardService],
 })
 export class CardModule {}

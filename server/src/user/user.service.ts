@@ -5,27 +5,33 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { RoleService } from 'src/role/role.service';
+import { RoleEntity } from 'src/role/entities/role.entity';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { UserDocument } from './entities/user.schema';
+import { UserEntity } from './entities/user.entity';
 import { UserRepository } from './user.repository';
-
 @Injectable()
 export class UserService {
   constructor(
     @InjectMapper()
     private readonly mapper: Mapper,
     private readonly userRepository: UserRepository,
-    private readonly roleService: RoleService,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const existingUser = await this.userRepository.findOne({
-      email: createUserDto.email,
-    });
+    const clonedPayload = {
+      ...createUserDto,
+    };
+
+    const existingUser = await this.userRepository.findByEmail(
+      createUserDto.email,
+    );
 
     if (existingUser) {
       throw new UnprocessableEntityException({
@@ -34,7 +40,9 @@ export class UserService {
       });
     }
 
-    const role = await this.roleService.findOneByName(createUserDto.role);
+    const role = await this.roleRepository.findOne({
+      where: { id: createUserDto.roleId },
+    });
     if (!role) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -44,11 +52,10 @@ export class UserService {
 
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(createUserDto.password, salt);
+    clonedPayload.password = password;
 
     const user = await this.userRepository.create({
-      ...createUserDto,
-      isActive: true,
-      password: password,
+      ...clonedPayload,
       role,
     });
 
@@ -59,24 +66,16 @@ export class UserService {
       });
     }
 
-    return this.mapper.map(user, UserDocument, UserResponseDto);
+    return this.mapper.map(user, UserEntity, UserResponseDto);
   }
 
   async findAll() {
-    const users = await this.userRepository.find({});
-
-    return this.mapper.mapArray(users, UserDocument, UserResponseDto);
+    const users = await this.userRepository.find();
+    return this.mapper.mapArray(users, UserEntity, UserResponseDto);
   }
 
   async findOne(id: string): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne(
-      {
-        _id: id,
-      },
-      {
-        path: 'role',
-      },
-    );
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new UnprocessableEntityException({
@@ -85,20 +84,33 @@ export class UserService {
       });
     }
 
-    return this.mapper.map(user, UserDocument, UserResponseDto);
+    return this.mapper.map(user, UserEntity, UserResponseDto);
   }
 
-  findOneByEmail(email: string) {
-    return this.userRepository.findOne({
-      email,
-    });
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'User not found',
+      });
+    }
+    return this.mapper.map(user, UserEntity, UserResponseDto);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.findOneAndUpdate({ _id: id }, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const updatedUser = await this.userRepository.update(id, updateUserDto);
+    return this.mapper.map(updatedUser, UserEntity, UserResponseDto);
   }
 
-  remove(id: string) {
-    return this.userRepository.findOneAndDelete({ _id: id });
+  async remove(id: string) {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'User not found',
+      });
+    }
+    return this.userRepository.remove(id);
   }
 }

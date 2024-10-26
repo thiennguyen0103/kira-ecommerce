@@ -1,13 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
-import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
 export class CreateUserDto {
@@ -32,8 +32,8 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
-  @ApiPropertyOptional({ enum: RoleEnum })
+  @ApiPropertyOptional({ type: String })
+  @IsUUID()
   @IsOptional()
-  @Type(() => String)
-  role?: RoleEnum | null;
+  roleId: string;
 }

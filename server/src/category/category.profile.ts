@@ -1,8 +1,8 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { CategoryResponseDto } from './dto/category-response.dto';
-import { CategoryDocument } from './entities/category.entity';
+import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryProfile extends AutomapperProfile {
@@ -12,15 +12,7 @@ export class CategoryProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(
-        mapper,
-        CategoryDocument,
-        CategoryResponseDto,
-        forMember(
-          (c) => c.id,
-          mapFrom((c) => c._id),
-        ),
-      );
+      createMap(mapper, CategoryEntity, CategoryResponseDto);
     };
   }
 }

@@ -1,91 +1,65 @@
 import { AutoMap } from '@automapper/classes';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-import { CategoryDocument } from 'src/category/entities/category.entity';
-import { AbstractDocument } from 'src/database/abstract.schema';
-import { UserDocument } from 'src/user/entities/user.schema';
+import { CategoryEntity } from 'src/category/entities/category.entity';
+import { AbstractEntity } from 'src/database/abstract.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
-@Schema({
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
+@Entity({
+  name: 'product',
 })
-export class ProductDocument extends AbstractDocument {
+export class ProductEntity extends AbstractEntity {
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
-    required: true,
   })
+  @Index()
   name: string;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
+    nullable: true,
   })
-  description?: string;
+  @Index()
+  description?: string | null;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
   })
   image?: string | null;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: String,
-    required: true,
   })
   slug: string;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: Number,
-    required: true,
   })
   price: number;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: Number,
     default: 0,
-    required: true,
   })
   rating: number;
 
   @AutoMap()
-  @Prop({
-    type: Types.ObjectId,
-    ref: CategoryDocument.name,
-    required: true,
-  })
-  category: CategoryDocument;
+  @ManyToOne(() => CategoryEntity, { eager: true })
+  category: CategoryEntity;
 
   @AutoMap()
-  @Prop({
-    type: Types.ObjectId,
-    ref: UserDocument.name,
-    required: true,
-  })
-  seller: UserDocument;
+  @ManyToOne(() => UserEntity, { eager: true })
+  seller: UserEntity;
 
   @AutoMap()
-  @Prop({
+  @Column({
     type: Boolean,
     default: false,
   })
   isDelete: boolean;
-
-  @AutoMap()
-  @Prop({
-    type: Date,
-  })
-  deletedAt: Date;
 }
-
-export const ProductSchema = SchemaFactory.createForClass(ProductDocument);
-
-ProductSchema.index({
-  name: 'text',
-  description: 'text',
-});

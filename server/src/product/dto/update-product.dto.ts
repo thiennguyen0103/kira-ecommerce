@@ -18,7 +18,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   })
   @IsString()
   @IsOptional()
-  description?: string;
+  description?: string | null;
 
   @ApiPropertyOptional({
     type: String,
@@ -48,5 +48,5 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
     required: true,
   })
   @Type(() => String)
-  category: string;
+  categoryId: string;
 }

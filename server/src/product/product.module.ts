@@ -1,26 +1,25 @@
 import { Module } from '@nestjs/common';
 import { CategoryModule } from 'src/category/category.module';
+import { CategoryEntity } from 'src/category/entities/category.entity';
 import { DatabaseModule } from 'src/database/database.module';
 import { LoggerModule } from 'src/logger/logger.module';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { UserModule } from 'src/user/user.module';
-import { ProductDocument, ProductSchema } from './entities/product.entity';
+import { ProductEntity } from './entities/product.entity';
 import { ProductController } from './product.controller';
 import { ProductProfile } from './product.profile';
-import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
 
 @Module({
   imports: [
     LoggerModule,
     DatabaseModule,
-    DatabaseModule.forFeature([
-      { name: ProductDocument.name, schema: ProductSchema },
-    ]),
+    DatabaseModule.forFeature([ProductEntity, UserEntity, CategoryEntity]),
     UserModule,
     CategoryModule,
   ],
   controllers: [ProductController],
-  providers: [ProductService, ProductRepository, ProductProfile],
-  exports: [ProductService, ProductRepository],
+  providers: [ProductService, ProductProfile],
+  exports: [ProductService],
 })
 export class ProductModule {}

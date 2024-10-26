@@ -1,12 +1,17 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { AllConfigType } from './config/config';
+import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 import validationOptions from './utils/validation-options';
 
 async function bootstrap() {
@@ -28,6 +33,10 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
+  app.useGlobalInterceptors(
+    new ResolvePromisesInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector)),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Ecommerce API')

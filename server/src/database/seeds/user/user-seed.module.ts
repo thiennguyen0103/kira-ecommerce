@@ -1,22 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { RoleDocument, RoleSchema } from 'src/role/entities/role.schema';
-import { UserDocument, UserSchema } from 'src/user/entities/user.schema';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RoleEntity } from 'src/role/entities/role.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { UserSeedService } from './user-seed.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: RoleDocument.name,
-        schema: RoleSchema,
-      },
-      {
-        name: UserDocument.name,
-        schema: UserSchema,
-      },
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity])],
   providers: [UserSeedService],
   exports: [UserSeedService],
 })

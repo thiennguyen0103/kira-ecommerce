@@ -9,9 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
-import { RoleDocument } from 'src/role/entities/role.schema';
+import { RoleResponseDto } from 'src/role/dto/role-response.dto';
+import { RoleEntity } from 'src/role/entities/role.entity';
+import { RoleRepository } from 'src/role/role.repository';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
-import { UserDocument } from 'src/user/entities/user.schema';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { AuthLoginDto } from './dto/auth-login.dto';
@@ -24,17 +26,29 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
-  async register(authRegisterDto: AuthRegisterDto, role: RoleEnum) {
+  async register(authRegisterDto: AuthRegisterDto, roleName: RoleEnum) {
+    const existingRole = await this.roleRepository.findByName(roleName);
+
+    if (!existingRole) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          email: 'Cannot create user',
+        },
+      });
+    }
+
     return this.userService.create({
       ...authRegisterDto,
-      role,
+      roleId: existingRole.id,
     });
   }
 
   async login(authLoginDto: AuthLoginDto, res: Response) {
-    const user = await this.userService.findOneByEmail(authLoginDto.email);
+    const user = await this.userService.findByEmail(authLoginDto.email);
 
     if (!user) {
       throw new UnprocessableEntityException({
@@ -60,8 +74,8 @@ export class AuthService {
     }
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
-      id: user._id,
-      role: user.role,
+      id: user.id,
+      role: this.mapper.map(user.role, RoleResponseDto, RoleEntity),
     });
 
     res.cookie('accessToken', token, {
@@ -78,11 +92,11 @@ export class AuthService {
       refreshToken,
       token,
       tokenExpires,
-      user: this.mapper.map(user, UserDocument, UserResponseDto),
+      user: this.mapper.map(user, UserEntity, UserResponseDto),
     };
   }
 
-  private async getTokensData(data: { id: string; role: RoleDocument }) {
+  private async getTokensData(data: { id: string; role: RoleEntity }) {
     const tokenExpiresIn = this.configService.getOrThrow('auth.expires', {
       infer: true,
     });

@@ -5,39 +5,46 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
-import { CategoryRepository } from './category.repository';
+import { Repository } from 'typeorm';
 import { CategoryResponseDto } from './dto/category-response.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategoryDocument } from './entities/category.entity';
+import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectMapper() private readonly mapper: Mapper,
-    private readonly categoryRepository: CategoryRepository,
+    @InjectMapper()
+    private readonly mapper: Mapper,
+    @InjectRepository(CategoryEntity)
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    const category = await this.categoryRepository.create({
-      ...createCategoryDto,
-      slug: slugify(createCategoryDto.name).toLowerCase(),
-    });
-    return this.mapper.map(category, CategoryDocument, CategoryResponseDto);
+    const category = await this.categoryRepository.save(
+      this.categoryRepository.create({
+        ...createCategoryDto,
+        slug: slugify(createCategoryDto.name).toLowerCase(),
+      }),
+    );
+    return this.mapper.map(category, CategoryEntity, CategoryResponseDto);
   }
 
   async findAll() {
     const categories = await this.categoryRepository.find();
     return this.mapper.mapArray(
       categories,
-      CategoryDocument,
+      CategoryEntity,
       CategoryResponseDto,
     );
   }
 
   async findOne(id: string) {
-    const category = await this.categoryRepository.findOne({ _id: id });
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+    });
 
     if (!category) {
       throw new UnprocessableEntityException({
@@ -46,11 +53,11 @@ export class CategoryService {
       });
     }
 
-    return this.mapper.map(category, CategoryDocument, CategoryResponseDto);
+    return this.mapper.map(category, CategoryEntity, CategoryResponseDto);
   }
 
   async findOneBySlug(slug: string) {
-    const category = await this.categoryRepository.findOne({ slug });
+    const category = await this.categoryRepository.findOne({ where: { slug } });
 
     if (!category) {
       throw new UnprocessableEntityException({
@@ -58,25 +65,44 @@ export class CategoryService {
         message: 'Category not found',
       });
     }
-
-    return this.mapper.map(category, CategoryDocument, CategoryResponseDto);
+    return this.mapper.map(category, CategoryEntity, CategoryResponseDto);
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    const category = await this.categoryRepository.findOneAndUpdate(
-      { _id: id },
-      {
-        ...updateCategoryDto,
-        slug: slugify(updateCategoryDto.name).toLowerCase(),
-      },
+    const category = await this.categoryRepository.findOne({ where: { id } });
+
+    if (!category) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Category not found',
+      });
+    }
+    const updatedCategory = await this.categoryRepository.save({
+      ...category,
+      ...updateCategoryDto,
+      slug: slugify(updateCategoryDto.name).toLowerCase(),
+    });
+    return this.mapper.map(
+      updatedCategory,
+      CategoryEntity,
+      CategoryResponseDto,
     );
-    return this.mapper.map(category, CategoryDocument, CategoryResponseDto);
   }
 
   async remove(id: string) {
-    const category = await this.categoryRepository.findOneAndDelete({
-      _id: id,
-    });
-    return this.mapper.map(category, CategoryDocument, CategoryResponseDto);
+    const category = await this.categoryRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Category not found',
+      });
+    }
+
+    const deletedCategory = await this.categoryRepository.remove(category);
+    return this.mapper.map(
+      deletedCategory,
+      CategoryEntity,
+      CategoryResponseDto,
+    );
   }
 }

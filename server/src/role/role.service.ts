@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RoleRepository } from './role.repository';
 @Injectable()
@@ -11,9 +12,7 @@ export class RoleService {
     });
   }
 
-  findOneByName(name: string) {
-    return this.roleRepository.findOne({
-      name,
-    });
+  findByName(name: RoleEnum) {
+    return this.roleRepository.findByName(name);
   }
 }

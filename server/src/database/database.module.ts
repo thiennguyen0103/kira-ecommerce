@@ -1,16 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
-import { MongooseConfigService } from './mongoose-config.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { TypeOrmConfigService } from './typeorm-config.service';
 
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      useClass: MongooseConfigService,
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+      dataSourceFactory: async (options: DataSourceOptions) => {
+        return new DataSource(options).initialize();
+      },
     }),
   ],
 })
 export class DatabaseModule {
-  static forFeature(model: ModelDefinition[]) {
-    return MongooseModule.forFeature(model);
+  static forFeature(model: EntityClassOrSchema[]) {
+    return TypeOrmModule.forFeature(model);
   }
 }

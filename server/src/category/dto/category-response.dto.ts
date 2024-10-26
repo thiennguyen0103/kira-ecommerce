@@ -1,10 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiResponseProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
 export class CategoryResponseDto {
   @AutoMap()
   @ApiResponseProperty()
+  @IsUUID()
   id: string;
 
   @AutoMap()
