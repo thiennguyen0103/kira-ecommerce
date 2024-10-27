@@ -10,6 +10,8 @@ import appConfig from './config/app-config';
 import databaseConfig from './database/config/database-config';
 import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
+import { PaymentModule } from './payment/payment.module';
+import paymentConfig from './payment/config/payment-config';
 import { ProductModule } from './product/product.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
@@ -18,7 +20,7 @@ import { UserModule } from './user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, authConfig],
+      load: [appConfig, databaseConfig, authConfig, paymentConfig],
       envFilePath: ['.env'],
     }),
     AutomapperModule.forRoot({
@@ -32,6 +34,7 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     ProductModule,
     CardModule,
+    PaymentModule,
   ],
 })
 export class AppModule {}
