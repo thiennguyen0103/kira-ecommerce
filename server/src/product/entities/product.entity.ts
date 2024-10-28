@@ -37,7 +37,9 @@ export class ProductEntity extends AbstractEntity {
 
   @AutoMap()
   @Column({
-    type: Number,
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
   })
   price: number;
 

@@ -65,7 +65,20 @@ export class ProductService {
     return this.mapper.mapArray(products, ProductEntity, ProductResponseDto);
   }
 
-  async findOneBySlug(slug: string) {
+  async findById(id: string) {
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Product not found',
+      });
+    }
+
+    return this.mapper.map(product, ProductEntity, ProductResponseDto);
+  }
+
+  async findBySlug(slug: string) {
     const product = await this.productRepository.findOne({ where: { slug } });
 
     if (!product) {

@@ -13,6 +13,7 @@ export class ProductProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper) => {
       createMap(mapper, ProductEntity, ProductResponseDto);
+      createMap(mapper, ProductResponseDto, ProductEntity);
     };
   }
 }

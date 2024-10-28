@@ -1,19 +1,19 @@
 import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { UserResponseDto } from './dto/user-response.dto';
-import { UserEntity } from './entities/user.entity';
+import { OrderResponseDto } from './dto/order-response.dto';
+import { OrderEntity } from './entities/order.entity';
 
 @Injectable()
-export class UserProfile extends AutomapperProfile {
+export class OrderProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(mapper, UserEntity, UserResponseDto);
-      createMap(mapper, UserResponseDto, UserEntity);
+      createMap(mapper, OrderEntity, OrderResponseDto);
+      createMap(mapper, OrderResponseDto, OrderEntity);
     };
   }
 }

@@ -13,6 +13,7 @@ export class CategoryProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper) => {
       createMap(mapper, CategoryEntity, CategoryResponseDto);
+      createMap(mapper, CategoryResponseDto, CategoryEntity);
     };
   }
 }

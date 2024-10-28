@@ -42,7 +42,7 @@ export class ProductController {
 
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
-    return this.productService.findOneBySlug(slug);
+    return this.productService.findBySlug(slug);
   }
 
   @ApiBearerAuth()
