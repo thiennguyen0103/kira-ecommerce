@@ -1,10 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiResponseProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsArray, IsString, IsUUID } from 'class-validator';
-import { SubcategoryResponseDto } from 'src/subcategory/dto/subcategory-response.dto';
+import { IsString, IsUUID } from 'class-validator';
 
-export class CategoryResponseDto {
+export class SubcategoryResponseDto {
   @AutoMap()
   @ApiResponseProperty()
   @IsUUID()
@@ -37,12 +35,4 @@ export class CategoryResponseDto {
   })
   @IsString()
   slug: string;
-
-  @AutoMap(() => [SubcategoryResponseDto])
-  @ApiResponseProperty({
-    type: [SubcategoryResponseDto],
-  })
-  @IsArray()
-    @Type(() => SubcategoryResponseDto)
-  subcategories: SubcategoryResponseDto[];
 }

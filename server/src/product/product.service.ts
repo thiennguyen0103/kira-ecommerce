@@ -8,7 +8,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
 import { CategoryService } from 'src/category/category.service';
-import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
@@ -22,29 +21,12 @@ export class ProductService {
     private readonly mapper: Mapper,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly userService: UserService,
     private readonly categoryService: CategoryService,
   ) {}
-  async create(createProductDto: CreateProductDto, sellerId: string) {
-    const seller = await this.userService.findById(sellerId);
-
-    if (!seller) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        message: 'Seller not found',
-      });
-    }
-
+  async create(createProductDto: CreateProductDto) {
     const category = await this.categoryService.findById(
       createProductDto.categoryId,
     );
-
-    if (!category) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        message: 'Category not found',
-      });
-    }
 
     const product = await this.productRepository.save(
       this.productRepository.create({
@@ -52,7 +34,6 @@ export class ProductService {
         slug: (
           createProductDto?.slug || slugify(createProductDto.name)
         ).toLowerCase(),
-        sellerId,
         categoryId: category.id,
       }),
     );

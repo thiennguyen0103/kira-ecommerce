@@ -57,12 +57,6 @@ export class ProductResponseDto {
   })
   category: CategoryResponseDto;
 
-  @AutoMap(() => UserResponseDto)
-  @ApiResponseProperty({
-    type: UserResponseDto,
-  })
-  seller: UserResponseDto;
-
   @AutoMap()
   @ApiResponseProperty({
     type: Boolean,

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CardModule } from 'src/card/card.module';
+import { CartModule } from 'src/cart/cart.module';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import { StripeModule } from './stripe/stripe.module';
@@ -18,7 +18,7 @@ import { StripeModule } from './stripe/stripe.module';
         },
       }),
     }),
-    CardModule,
+    CartModule,
   ],
   controllers: [PaymentController],
   providers: [PaymentService],

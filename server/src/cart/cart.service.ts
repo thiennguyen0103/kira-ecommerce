@@ -9,26 +9,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from 'src/product/entities/product.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { AddToCardDto } from './dto/add-to-card.dto';
-import { CardResponseDto } from './dto/card-response.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
-import { CardEntity } from './entities/card.entity';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { CartResponseDto } from './dto/cart-response.dto';
+import { UpdateCartDto } from './dto/update-cart.dto';
+import { CartEntity } from './entities/cart.entity';
 
 @Injectable()
-export class CardService {
+export class CartService {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    @InjectRepository(CardEntity)
-    private readonly cardRepository: Repository<CardEntity>,
+    @InjectRepository(CartEntity)
+    private readonly cartRepository: Repository<CartEntity>,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-  async addToCard(addToCardDto: AddToCardDto, userId: string) {
+  async addToCart(addToCartDto: AddToCartDto, userId: string) {
     const product = await this.productRepository.findOne({
       where: {
-        id: addToCardDto.productId,
+        id: addToCartDto.productId,
       },
     });
 
@@ -47,76 +47,76 @@ export class CardService {
       });
     }
 
-    const cardItem = await this.cardRepository.findOne({
+    const cartItem = await this.cartRepository.findOne({
       where: {
         product: {
-          id: addToCardDto.productId,
+          id: addToCartDto.productId,
         },
       },
     });
 
-    let card: CardEntity;
-    if (cardItem) {
-      card = await this.cardRepository.save({
-        ...card,
-        quantity: cardItem.quantity + addToCardDto.quantity,
+    let cart: CartEntity;
+    if (cartItem) {
+      cart = await this.cartRepository.save({
+        ...cart,
+        quantity: cartItem.quantity + addToCartDto.quantity,
       });
     } else {
-      card = await this.cardRepository.save(
-        this.cardRepository.create({
+      cart = await this.cartRepository.save(
+        this.cartRepository.create({
           productId: product.id,
           userId: user.id,
-          quantity: addToCardDto.quantity,
+          quantity: addToCartDto.quantity,
         }),
       );
     }
 
-    return this.mapper.map(card, CardEntity, CardResponseDto);
+    return this.mapper.map(cart, CartEntity, CartResponseDto);
   }
 
   async findAll(userId: string) {
-    const cards = await this.cardRepository.find({
+    const carts = await this.cartRepository.find({
       where: {
         user: {
           id: userId,
         },
       },
     });
-    return this.mapper.mapArray(cards, CardEntity, CardResponseDto);
+    return this.mapper.mapArray(carts, CartEntity, CartResponseDto);
   }
 
-  async update(id: string, updateCardDto: UpdateCardDto) {
-    const card = await this.cardRepository.findOne({
+  async update(id: string, updateCartDto: UpdateCartDto) {
+    const cart = await this.cartRepository.findOne({
       where: {
         id,
       },
     });
-    if (!card) {
+    if (!cart) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
-        message: 'Card not found',
+        message: 'Cart not found',
       });
     }
-    const udpatedCard = await this.cardRepository.save({
-      ...card,
-      ...updateCardDto,
+    const udpatedCart = await this.cartRepository.save({
+      ...cart,
+      ...updateCartDto,
     });
-    return this.mapper.map(udpatedCard, CardEntity, CardResponseDto);
+    return this.mapper.map(udpatedCart, CartEntity, CartResponseDto);
   }
 
   async remove(id: string) {
-    const card = await this.cardRepository.findOne({
+    const cart = await this.cartRepository.findOne({
       where: {
         id,
       },
     });
-    if (!card) {
+    if (!cart) {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
-        message: 'Card not found',
+        message: 'Cart not found',
       });
     }
-    const deletedCard = await this.cardRepository.remove(card);
-    return this.mapper.map(deletedCard, CardEntity, CardResponseDto);
+    const deletedCart = await this.cartRepository.remove(cart);
+    return this.mapper.map(deletedCart, CartEntity, CartResponseDto);
   }
 }

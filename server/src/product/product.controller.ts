@@ -1,15 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-  SerializeOptions,
-  UseGuards,
-} from '@nestjs/common';
+import
+  {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    SerializeOptions,
+    UseGuards
+  } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
@@ -28,11 +28,11 @@ export class ProductController {
     groups: [],
   })
   @ApiBearerAuth()
-  @Roles(RoleEnum.Seller)
+  @Roles(RoleEnum.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post()
-  create(@Body() createProductDto: CreateProductDto, @Req() req) {
-    return this.productService.create(createProductDto, req.user?.id);
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productService.create(createProductDto);
   }
 
   @Get()
@@ -46,7 +46,7 @@ export class ProductController {
   }
 
   @ApiBearerAuth()
-  @Roles(RoleEnum.Seller)
+  @Roles(RoleEnum.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
@@ -54,7 +54,7 @@ export class ProductController {
   }
 
   @ApiBearerAuth()
-  @Roles(RoleEnum.Seller, RoleEnum.Admin)
+  @Roles(RoleEnum.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {

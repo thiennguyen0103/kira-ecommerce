@@ -32,16 +32,5 @@ export class RoleSeedService {
 
       await data.save();
     }
-
-    const seller = await this.roleRepository.findOne({
-      where: { name: RoleEnum.Seller },
-    });
-    if (!seller) {
-      const data = this.roleRepository.create({
-        name: RoleEnum.Seller,
-      });
-
-      await data.save();
-    }
   }
 }

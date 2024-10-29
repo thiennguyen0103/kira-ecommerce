@@ -5,9 +5,9 @@ import { UserEntity } from 'src/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({
-  name: 'card',
+  name: 'cart',
 })
-export class CardEntity extends AbstractEntity {
+export class CartEntity extends AbstractEntity {
   @Column({
     type: 'uuid',
   })

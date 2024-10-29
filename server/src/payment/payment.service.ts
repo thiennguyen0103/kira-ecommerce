@@ -1,5 +1,5 @@
 import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
-import { CardService } from 'src/card/card.service';
+import { CartService } from 'src/cart/cart.service';
 import Stripe from 'stripe';
 import { CheckoutDto } from './dto/checkout.dto';
 import { StripeService } from './stripe/stripe.service';
@@ -8,7 +8,7 @@ import { StripeService } from './stripe/stripe.service';
 export class PaymentService {
   constructor(
     private readonly stripeService: StripeService,
-    private readonly cardService: CardService,
+    private readonly cartService: CartService,
   ) {}
 
   test() {
@@ -16,22 +16,22 @@ export class PaymentService {
   }
 
   async checkout(checkoutDto: CheckoutDto, userId: string) {
-    const cards = await this.validateSelectedProducts(
+    const carts = await this.validateSelectedProducts(
       userId,
-      checkoutDto.cardIds,
+      checkoutDto.cartIds,
     );
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cards.map(
-      (card) => ({
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = carts.map(
+      (cart) => ({
         price_data: {
           currency: 'vnd',
           product_data: {
-            name: card.product.name,
-            description: card.product.description,
-            images: [card.product.image],
+            name: cart.product.name,
+            description: cart.product.description,
+            images: [cart.product.image],
           },
-          unit_amount: card.product.price,
+          unit_amount: cart.product.price,
         },
-        quantity: card.quantity,
+        quantity: cart.quantity,
       }),
     );
 
@@ -44,18 +44,18 @@ export class PaymentService {
     });
   }
 
-  private async validateSelectedProducts(userId: string, cardIds: string[]) {
-    const userCardProducts = await this.cardService.findAll(userId);
+  private async validateSelectedProducts(userId: string, cartIds: string[]) {
+    const userCartProducts = await this.cartService.findAll(userId);
 
-    return cardIds.map((cardId) => {
-      const cardProduct = userCardProducts.find((c) => c.id === cardId);
-      if (!cardProduct) {
+    return cartIds.map((cartId) => {
+      const cartProduct = userCartProducts.find((c) => c.id === cartId);
+      if (!cartProduct) {
         throw new ForbiddenException({
           status: HttpStatus.FORBIDDEN,
           message: 'Product does not belong to user',
         });
       }
-      return cardProduct;
+      return cartProduct;
     });
   }
 }

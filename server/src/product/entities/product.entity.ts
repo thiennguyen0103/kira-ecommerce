@@ -60,16 +60,6 @@ export class ProductEntity extends AbstractEntity {
   @JoinColumn({ name: 'categoryId' })
   category: CategoryEntity;
 
-  @Column({
-    type: 'uuid',
-  })
-  sellerId: string;
-
-  @AutoMap()
-  @ManyToOne(() => UserEntity, { eager: true })
-  @JoinColumn({ name: 'sellerId' })
-  seller: UserEntity;
-
   @AutoMap()
   @Column({
     type: Boolean,

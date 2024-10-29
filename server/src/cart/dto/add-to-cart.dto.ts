@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class AddToCardDto {
+export class AddToCartDto {
   @ApiProperty({
     type: String,
     required: true,

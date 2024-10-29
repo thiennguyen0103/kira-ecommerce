@@ -6,5 +6,5 @@ export class CheckoutDto {
     type: [String],
   })
   @IsUUID(undefined, { each: true })
-  cardIds: string[];
+  cartIds: string[];
 }

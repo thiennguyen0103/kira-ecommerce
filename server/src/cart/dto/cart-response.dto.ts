@@ -3,7 +3,7 @@ import { ApiResponseProperty } from '@nestjs/swagger';
 import { ProductResponseDto } from 'src/product/dto/product-response.dto';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
 
-export class CardResponseDto {
+export class CartResponseDto {
   @AutoMap()
   @ApiResponseProperty()
   id: string;

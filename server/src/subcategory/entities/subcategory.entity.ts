@@ -1,12 +1,23 @@
 import { AutoMap } from '@automapper/classes';
+import { CategoryEntity } from 'src/category/entities/category.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
-import { SubcategoryEntity } from 'src/subcategory/entities/subcategory.entity';
-import { Column, Entity, Index, OneToMany } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({
-  name: 'category',
+  name: 'subcategory',
 })
-export class CategoryEntity extends AbstractEntity {
+export class SubcategoryEntity extends AbstractEntity {
+  @Column({
+    type: 'uuid',
+  })
+  categoryId: string;
+
+  @ManyToOne(() => CategoryEntity, (category) => category.subcategories)
+  @JoinColumn({
+    name: 'categoryId',
+  })
+  category: CategoryEntity;
+
   @AutoMap()
   @Column({
     type: String,
@@ -33,10 +44,4 @@ export class CategoryEntity extends AbstractEntity {
     type: String,
   })
   slug: string;
-
-  @AutoMap()
-  @OneToMany(() => SubcategoryEntity, (subcategory) => subcategory.category, {
-    eager: true,
-  })
-  subcategories: SubcategoryEntity[];
 }

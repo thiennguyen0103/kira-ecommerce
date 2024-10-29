@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
-import { CardModule } from './card/card.module';
+import { CartModule } from './cart/cart.module';
 import { CategoryModule } from './category/category.module';
 import appConfig from './config/app-config';
 import databaseConfig from './database/config/database-config';
@@ -17,6 +17,7 @@ import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
 import { OrderItemModule } from './order-item/order-item.module';
+import { SubcategoryModule } from './subcategory/subcategory.module';
 
 @Module({
   imports: [
@@ -35,10 +36,11 @@ import { OrderItemModule } from './order-item/order-item.module';
     RoleModule,
     CategoryModule,
     ProductModule,
-    CardModule,
+    CartModule,
     PaymentModule,
     OrderModule,
     OrderItemModule,
+    SubcategoryModule,
   ],
 })
 export class AppModule {}

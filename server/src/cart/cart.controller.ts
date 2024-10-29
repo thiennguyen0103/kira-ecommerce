@@ -14,35 +14,35 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/utils/decorators/role.decorator';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
-import { CardService } from './card.service';
-import { AddToCardDto } from './dto/add-to-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { CartService } from './cart.service';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { UpdateCartDto } from './dto/update-cart.dto';
 
 @ApiBearerAuth()
 @Roles(RoleEnum.Client)
 @UseGuards(JwtAuthGuard, RoleGuard)
-@ApiTags('Card')
-@Controller('card')
-export class CardController {
-  constructor(private readonly cardService: CardService) {}
+@ApiTags('Cart')
+@Controller('cart')
+export class CartController {
+  constructor(private readonly cartService: CartService) {}
 
   @Post()
-  create(@Body() addToCard: AddToCardDto, @Req() req) {
-    return this.cardService.addToCard(addToCard, req.user?.id);
+  create(@Body() addToCart: AddToCartDto, @Req() req) {
+    return this.cartService.addToCart(addToCart, req.user?.id);
   }
 
   @Get()
   findAll(@Req() req) {
-    return this.cardService.findAll(req.user?.id);
+    return this.cartService.findAll(req.user?.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update(id, updateCardDto);
+  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
+    return this.cartService.update(id, updateCartDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cardService.remove(id);
+    return this.cartService.remove(id);
   }
 }

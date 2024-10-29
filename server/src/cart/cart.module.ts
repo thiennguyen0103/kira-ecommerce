@@ -5,21 +5,21 @@ import { ProductEntity } from 'src/product/entities/product.entity';
 import { ProductModule } from 'src/product/product.module';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserModule } from 'src/user/user.module';
-import { CardController } from './card.controller';
-import { CardProfile } from './card.profile';
-import { CardService } from './card.service';
-import { CardEntity } from './entities/card.entity';
+import { CartController } from './cart.controller';
+import { CartProfile } from './cart.profile';
+import { CartService } from './cart.service';
+import { CartEntity } from './entities/cart.entity';
 
 @Module({
   imports: [
     LoggerModule,
     DatabaseModule,
-    DatabaseModule.forFeature([CardEntity, UserEntity, ProductEntity]),
+    DatabaseModule.forFeature([CartEntity, UserEntity, ProductEntity]),
     ProductModule,
     UserModule,
   ],
-  controllers: [CardController],
-  providers: [CardService, CardProfile],
-  exports: [CardService],
+  controllers: [CartController],
+  providers: [CartService, CartProfile],
+  exports: [CartService],
 })
-export class CardModule {}
+export class CartModule {}
