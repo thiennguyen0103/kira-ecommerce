@@ -37,3 +37,7 @@ export const RegisterFormValidation = z
       });
     }
   });
+
+export const NewsletterFormValidation = z.object({
+  email: z.string().email("Invalid email address"),
+});

@@ -10,3 +10,7 @@ export const RegisterFormValues = {
   lastName: "",
   confirmPassword: "",
 };
+
+export const NewsletterFormValues = {
+  email: "",
+};

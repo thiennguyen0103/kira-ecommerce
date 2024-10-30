@@ -1,19 +1,16 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import TanstackQueryProvider from "@/providers/tanstack-query-provider";
-import AuthProvider from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
+import AuthProvider from "@/providers/auth-provider";
+import TanstackQueryProvider from "@/providers/tanstack-query-provider";
+import type { Metadata } from "next";
+import { Mulish } from "next/font/google";
+import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const mulish = Mulish({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-mulish",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background antialiased`}
+        className={cn(
+          `font-mulish min-h-screen bg-background antialiased`,
+          mulish.variable,
+        )}
       >
         <TanstackQueryProvider>
           <AuthProvider>{children}</AuthProvider>

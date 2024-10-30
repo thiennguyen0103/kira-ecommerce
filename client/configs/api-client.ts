@@ -73,8 +73,7 @@ export default class ApiClient {
     return {
       "Content-Type": contentType,
       accept: "application/json",
-      authorization: await this.getToken(),
-      "ngrok-skip-browser-warning": "69420",
+      // authorization: await this.getToken(),
     };
   }
 

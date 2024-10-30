@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { ReactNode } from "react";
 import ReactDatePicker from "react-datepicker";
 import { Control } from "react-hook-form";
 import { Checkbox } from "./ui/checkbox";
@@ -31,51 +32,46 @@ interface CustomProps {
   name: string;
   label?: string;
   placeholder?: string;
-  iconSrc?: string;
-  iconAlt?: string;
+  iconSrc?: ReactNode;
   disabled?: boolean;
   dateFormat?: string;
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
   fieldType: FormFieldType;
+  className?: string;
 }
 
 const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
   const {
     isLoading,
-    control,
     fieldType,
     name,
     children,
     dateFormat,
     disabled,
-    iconAlt,
     iconSrc,
     label,
     placeholder,
     showTimeSelect,
     renderSkeleton,
+    className,
   } = props;
 
   switch (fieldType) {
     case FormFieldType.INPUT:
       return (
         <div className="relative">
-          {iconSrc && (
-            <Image
-              src={iconSrc}
-              height={20}
-              width={20}
-              alt={iconAlt || "icon"}
-              className="absolute left-2 top-1/2 -translate-y-1/2"
-            />
-          )}
+          {iconSrc ? (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              {iconSrc}
+            </div>
+          ) : null}
           <FormControl>
             <Input
               placeholder={placeholder}
               {...field}
-              className={cn(iconSrc && "pl-9")}
+              className={cn(iconSrc && "pl-10", className)}
               disabled={isLoading}
             />
           </FormControl>
@@ -84,21 +80,17 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.PASSWORD_INPUT:
       return (
         <div className="relative">
-          {iconSrc && (
-            <Image
-              src={iconSrc}
-              height={20}
-              width={20}
-              alt={iconAlt || "icon"}
-              className="absolute left-2 top-1/2 -translate-y-1/2"
-            />
-          )}
+          {iconSrc ? (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              {iconSrc}
+            </div>
+          ) : null}
           <FormControl>
             <Input
               placeholder={placeholder}
               {...field}
               type="password"
-              className={cn(iconSrc && "pl-9")}
+              className={cn(iconSrc && "pl-10")}
               disabled={isLoading}
               autoComplete="on"
             />

@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
         break;
       case 403:
         // TODO: Define what to do on 403
-        window.location.href = "/403";
+        // window.location.href = "/403";
         break;
       case 405:
         // TODO: Define what to do on 405
