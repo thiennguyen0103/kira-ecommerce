@@ -71,7 +71,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             <Input
               placeholder={placeholder}
               {...field}
-              className={cn(iconSrc && "pl-10", className)}
+              className={cn(iconSrc && "pl-11", className)}
               disabled={isLoading}
             />
           </FormControl>
@@ -90,7 +90,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               placeholder={placeholder}
               {...field}
               type="password"
-              className={cn(iconSrc && "pl-10")}
+              className={cn(iconSrc && "pl-11")}
               disabled={isLoading}
               autoComplete="on"
             />

@@ -39,7 +39,7 @@ const Header = () => {
     >
       <div
         className={cn(
-          "container flex h-[100px] w-full flex-wrap items-center justify-between gap-2 py-2 duration-300 md:h-16 md:flex-nowrap md:gap-4 md:py-0",
+          "container flex h-[110px] w-full flex-wrap items-center justify-between gap-2 py-2 duration-300 md:h-16 md:flex-nowrap md:gap-4 md:py-0",
           isScrolled && "md:h-12",
         )}
       >
@@ -63,7 +63,7 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="hidden h-8 w-8 md:flex md:h-10 md:w-10"
+            className="hidden h-8 w-8 md:flex md:h-10 md:w-10 md:-mr-3"
             asChild
           >
             <Link href={"/login"}>
