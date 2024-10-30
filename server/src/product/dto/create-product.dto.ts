@@ -47,5 +47,5 @@ export class CreateProductDto {
     required: true,
   })
   @IsUUID()
-  categoryId: string;
+  subcategoryId: string;
 }

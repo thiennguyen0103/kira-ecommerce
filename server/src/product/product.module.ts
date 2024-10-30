@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CategoryModule } from 'src/category/category.module';
-import { CategoryEntity } from 'src/category/entities/category.entity';
 import { DatabaseModule } from 'src/database/database.module';
 import { LoggerModule } from 'src/logger/logger.module';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { SubcategoryModule } from 'src/subcategory/subcategory.module';
 import { UserModule } from 'src/user/user.module';
 import { ProductEntity } from './entities/product.entity';
 import { ProductController } from './product.controller';
@@ -14,9 +12,9 @@ import { ProductService } from './product.service';
   imports: [
     LoggerModule,
     DatabaseModule,
-    DatabaseModule.forFeature([ProductEntity, UserEntity, CategoryEntity]),
+    DatabaseModule.forFeature([ProductEntity]),
     UserModule,
-    CategoryModule,
+    SubcategoryModule,
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductProfile],

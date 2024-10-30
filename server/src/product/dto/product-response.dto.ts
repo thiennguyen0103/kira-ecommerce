@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiResponseProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
-import { CategoryResponseDto } from 'src/category/dto/category-response.dto';
-import { UserResponseDto } from 'src/user/dto/user-response.dto';
+import { SubcategoryResponseDto } from 'src/subcategory/dto/subcategory-response.dto';
 
 export class ProductResponseDto {
   @AutoMap()
@@ -42,6 +42,7 @@ export class ProductResponseDto {
     type: Number,
   })
   @IsNumber()
+  @Type(() => Number)
   price: number;
 
   @AutoMap()
@@ -51,11 +52,11 @@ export class ProductResponseDto {
   @IsNumber()
   rating: number;
 
-  @AutoMap(() => CategoryResponseDto)
+  @AutoMap(() => SubcategoryResponseDto)
   @ApiResponseProperty({
-    type: CategoryResponseDto,
+    type: SubcategoryResponseDto,
   })
-  category: CategoryResponseDto;
+  subcategory: SubcategoryResponseDto;
 
   @AutoMap()
   @ApiResponseProperty({

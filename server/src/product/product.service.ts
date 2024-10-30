@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
-import { CategoryService } from 'src/category/category.service';
+import { SubcategoryService } from 'src/subcategory/subcategory.service';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductQueryDto } from './dto/product-query.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
@@ -21,11 +22,11 @@ export class ProductService {
     private readonly mapper: Mapper,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly categoryService: CategoryService,
+    private readonly subcategoryService: SubcategoryService,
   ) {}
   async create(createProductDto: CreateProductDto) {
-    const category = await this.categoryService.findById(
-      createProductDto.categoryId,
+    const subcategory = await this.subcategoryService.findById(
+      createProductDto.subcategoryId,
     );
 
     const product = await this.productRepository.save(
@@ -34,15 +35,27 @@ export class ProductService {
         slug: (
           createProductDto?.slug || slugify(createProductDto.name)
         ).toLowerCase(),
-        categoryId: category.id,
+        subcategoryId: subcategory.id,
       }),
     );
 
     return this.mapper.map(product, ProductEntity, ProductResponseDto);
   }
 
-  async findAll() {
-    const products = await this.productRepository.find();
+  async findAll(productQueryDto: ProductQueryDto) {
+    const productQuery = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.subcategory', 'subcategory');
+
+    if (productQueryDto?.q) {
+      productQuery.andWhere(
+        'unaccent(product.name) ILIKE unaccent(:value)',
+        { value: `%${productQueryDto.q}%` },
+      );
+    }
+
+    const products = await productQuery.getMany();
+
     return this.mapper.mapArray(products, ProductEntity, ProductResponseDto);
   }
 

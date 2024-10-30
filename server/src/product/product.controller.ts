@@ -7,6 +7,7 @@ import
     Param,
     Patch,
     Post,
+    Query,
     SerializeOptions,
     UseGuards
   } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
+import { ProductQueryDto } from './dto/product-query.dto';
 
 @ApiTags('Product')
 @Controller('product')
@@ -36,8 +38,8 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query() productQuery: ProductQueryDto) {
+    return this.productService.findAll(productQuery);
   }
 
   @Get(':slug')

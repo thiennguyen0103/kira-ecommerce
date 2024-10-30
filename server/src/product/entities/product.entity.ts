@@ -1,7 +1,6 @@
 import { AutoMap } from '@automapper/classes';
-import { CategoryEntity } from 'src/category/entities/category.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { SubcategoryEntity } from 'src/subcategory/entities/subcategory.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({
@@ -53,12 +52,12 @@ export class ProductEntity extends AbstractEntity {
   @Column({
     type: 'uuid',
   })
-  categoryId: string;
+  subcategoryId: string;
 
   @AutoMap()
-  @ManyToOne(() => CategoryEntity, { eager: true })
-  @JoinColumn({ name: 'categoryId' })
-  category: CategoryEntity;
+  @ManyToOne(() => SubcategoryEntity, { eager: true })
+  @JoinColumn({ name: 'subcategoryId' })
+  subcategory: SubcategoryEntity;
 
   @AutoMap()
   @Column({
