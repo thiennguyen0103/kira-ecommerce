@@ -1,29 +1,26 @@
-export type User = {
+type User = {
   id: string;
+  name: string;
   email: string;
-  provider: string;
-  socialId: string;
-  firstName: string;
-  lastName: string;
-  photo: Photo;
+  image: string;
+  isActive: boolean;
   role: Role;
-  status: Status;
   createdAt: string;
   updatedAt: string;
-  deletedAt: string;
+  deletedAt: string | null;
 };
 
-export type Photo = {
+type Photo = {
   id: string;
   path: string;
 };
 
-export type Role = {
+type Role = {
   id: string;
   name: string;
 };
 
-export type Status = {
+type Status = {
   id: string;
   name: string;
 };
