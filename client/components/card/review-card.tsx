@@ -11,9 +11,9 @@ const ReviewCard = () => {
           <Icons.verify />
         </div>
         <p className="text-black/60">
-          "Tôi thực sự ấn tượng với chất lượng và kiểu dáng của những bộ quần áo
+          &quot;Tôi thực sự ấn tượng với chất lượng và kiểu dáng của những bộ quần áo
           tôi nhận được từ Shop.co. Từ trang phục thường ngày đến những chiếc
-          váy thanh lịch, mọi món đồ tôi mua đều vượt quá mong đợi của tôi."
+          váy thanh lịch, mọi món đồ tôi mua đều vượt quá mong đợi của tôi.&quot;
         </p>
       </div>
     </div>

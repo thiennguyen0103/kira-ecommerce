@@ -41,7 +41,7 @@ const Breadcrumbs = () => {
 
       setBreadcrumbs(pathArray);
     }
-  }, [pathname]);
+  }, [pathname, isAdmin]);
 
   if (!breadcrumbs.length) {
     return null;
