@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiResponseProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
 import { RoleResponseDto } from 'src/role/dto/role-response.dto';
 
@@ -32,9 +32,19 @@ export class UserResponseDto {
 
   @AutoMap()
   @ApiResponseProperty({
+    type: String,
+  })
+  @IsString()
+  phoneNumber?: string;
+
+  @AutoMap()
+  @ApiResponseProperty({
     type: Boolean,
   })
   @IsBoolean()
+  @Expose({
+    groups: ['admin', 'me'],
+  })
   isActive: boolean;
 
   @Exclude({ toPlainOnly: true })
@@ -44,6 +54,9 @@ export class UserResponseDto {
   @AutoMap(() => RoleResponseDto)
   @ApiResponseProperty({
     type: RoleResponseDto,
+  })
+  @Expose({
+    groups: ['admin', 'me'],
   })
   role: RoleResponseDto;
 

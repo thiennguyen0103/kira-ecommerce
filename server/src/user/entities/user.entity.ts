@@ -1,8 +1,16 @@
 import { AutoMap } from '@automapper/classes';
 import { Exclude, Expose } from 'class-transformer';
+import { AddressEntity } from 'src/address/entities/address.entity';
 import { AbstractEntity } from 'src/database/abstract.entity';
 import { RoleEntity } from 'src/role/entities/role.entity';
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity({
   name: 'user',
@@ -55,4 +63,9 @@ export class UserEntity extends AbstractEntity {
   })
   @JoinColumn({ name: 'roleId' })
   role: RoleEntity;
+
+  @AutoMap()
+  @Expose({ groups: ['me', 'admin'] })
+  @OneToMany(() => AddressEntity, (address) => address.user)
+  addresses: AddressEntity;
 }
