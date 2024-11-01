@@ -1,7 +1,8 @@
 import { AppSidebar } from "@/app/(admin)/admin/_components/app-sidebar";
+import Loading from "@/components/loading";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Metadata } from "next";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 import Header from "./admin/_components/header";
 
 export const metadata: Metadata = {
@@ -11,15 +12,17 @@ export const metadata: Metadata = {
 
 const AdminLayout = ({ children }: PropsWithChildren) => {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <div className="flex flex-col w-full">
-        <Header />
-        <main className="w-full flex-1 p-4">
-          <div>{children}</div>
-        </main>
-      </div>
-    </SidebarProvider>
+    <Suspense fallback={<Loading />}>
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex w-full flex-col">
+          <Header />
+          <main className="w-full flex-1 p-4">
+            <div>{children}</div>
+          </main>
+        </div>
+      </SidebarProvider>
+    </Suspense>
   );
 };
 

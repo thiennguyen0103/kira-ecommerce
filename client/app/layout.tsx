@@ -1,9 +1,11 @@
+import Loading from "@/components/loading";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AuthProvider from "@/providers/auth-provider";
 import TanstackQueryProvider from "@/providers/tanstack-query-provider";
 import type { Metadata } from "next";
 import { Mulish } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 
 const mulish = Mulish({
@@ -27,14 +29,16 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          `font-mulish min-h-screen bg-background antialiased`,
+          `min-h-screen bg-background font-mulish antialiased`,
           mulish.variable,
         )}
       >
-        <TanstackQueryProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </TanstackQueryProvider>
-        <Toaster />
+        <Suspense fallback={<Loading />}>
+          <TanstackQueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </TanstackQueryProvider>
+          <Toaster />
+        </Suspense>
       </body>
     </html>
   );
