@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { getSession } from "next-auth/react";
 import queryString from "query-string";
 import axiosInstance from "./axios.config";
 
@@ -75,18 +74,5 @@ export default class ApiClient {
       accept: "application/json",
       // authorization: await this.getToken(),
     };
-  }
-
-  private static async getToken() {
-    if (typeof window !== "undefined") {
-      const session = await getSession();
-      if (session?.token) {
-        return (
-          `Bearer ` + JSON.stringify(session?.token).replaceAll(/[",\\]/g, "")
-        );
-      } else {
-        return [];
-      }
-    }
   }
 }

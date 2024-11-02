@@ -1,7 +1,6 @@
 import Loading from "@/components/loading";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
-import AuthProvider from "@/providers/auth-provider";
 import TanstackQueryProvider from "@/providers/tanstack-query-provider";
 import type { Metadata } from "next";
 import { Mulish } from "next/font/google";
@@ -35,7 +34,7 @@ export default function RootLayout({
       >
         <Suspense fallback={<Loading />}>
           <TanstackQueryProvider>
-            <AuthProvider>{children}</AuthProvider>
+            {children}
           </TanstackQueryProvider>
           <Toaster />
         </Suspense>

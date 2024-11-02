@@ -2,16 +2,17 @@
 
 import { LoginPayload } from "@/@types/auth";
 import { LoginFormValues } from "@/constants/form-values";
+import { useToast } from "@/hooks/use-toast";
 import { LoginFormValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import ButtonSubmit from "../button-submit";
 import CustomFormField, { FormFieldType } from "../custom-form-field";
+import { Icons } from "../icons";
 import {
   Card,
   CardContent,
@@ -22,8 +23,6 @@ import {
 } from "../ui/card";
 import { Form } from "../ui/form";
 import { ToastAction } from "../ui/toast";
-import { useToast } from "@/hooks/use-toast";
-import { Icons } from "../icons";
 const LoginForm = () => {
   const { toast } = useToast();
   const router = useRouter();
@@ -37,11 +36,7 @@ const LoginForm = () => {
   const { mutate: login, isPending: isLoading } = useMutation({
     mutationKey: ["register"],
     mutationFn: async (values: LoginPayload) => {
-      await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
+      console.log(values);
     },
     onSuccess: () => {
       toast({

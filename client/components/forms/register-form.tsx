@@ -133,7 +133,7 @@ const RegisterForm = () => {
             </div>
             <div className="flex w-full items-center gap-4">
               <div className="flex w-full cursor-pointer items-center justify-center rounded-md bg-orange-700 p-2 shadow-lg hover:bg-orange-700/90">
-                <Icons.google className="text-white" />
+                <Icons.googleIcon className="text-white" />
               </div>
               <div className="flex w-full cursor-pointer items-center justify-center rounded-md bg-blue-700 p-2 shadow-lg hover:bg-blue-700/90">
                 <Icons.facebook className="text-white" />
