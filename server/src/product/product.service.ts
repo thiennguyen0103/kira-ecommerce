@@ -8,6 +8,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import slugify from 'slugify';
 import { SubcategoryService } from 'src/subcategory/subcategory.service';
+import { checkSortOrder } from 'src/utils/check-sort-order';
+import { PageMetaDto } from 'src/utils/dtos/page-meta.dto';
+import { PageDto } from 'src/utils/dtos/page.dto';
+import { ProductSortByEnum } from 'src/utils/enums/query.enum';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
@@ -48,15 +52,68 @@ export class ProductService {
       .leftJoinAndSelect('product.subcategory', 'subcategory');
 
     if (productQueryDto?.q) {
+      productQuery.andWhere('unaccent(product.name) ILIKE unaccent(:value)', {
+        value: `%${productQueryDto.q}%`,
+      });
+    }
+
+    // filter with category slug
+    if (productQueryDto.c) {
       productQuery.andWhere(
-        'unaccent(product.name) ILIKE unaccent(:value)',
-        { value: `%${productQueryDto.q}%` },
+        'unaccent(product.subcategory.slug) ILIKE unaccent(:value)',
+        {
+          value: `%${productQueryDto.c}%`,
+        },
       );
     }
 
-    const products = await productQuery.getMany();
+    // get total items
+    const itemCount = await productQuery.getCount();
 
-    return this.mapper.mapArray(products, ProductEntity, ProductResponseDto);
+    // split data with page and limit
+    productQuery.skip(productQueryDto.skip).take(productQueryDto.limit);
+
+    if (productQueryDto.sortBy) {
+      switch (productQueryDto.sortBy) {
+        case ProductSortByEnum.Popular:
+          break;
+        case ProductSortByEnum.CreatedAt:
+          productQuery.addOrderBy('product.createdAt', 'DESC');
+          break;
+        case ProductSortByEnum.Sales:
+          break;
+        case ProductSortByEnum.Price:
+          productQuery.addOrderBy(
+            'product.price',
+            checkSortOrder(productQueryDto.order),
+          );
+          break;
+        default:
+          productQuery.addOrderBy(`product.updatedAt`, 'DESC');
+          break;
+      }
+    } else {
+      productQuery.addOrderBy(`product.updatedAt`, 'DESC');
+    }
+
+    const items = await productQuery.getMany();
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount,
+      pageOptions: {
+        page: productQueryDto.page,
+        skip: productQueryDto.skip,
+        limit: productQueryDto.limit,
+      },
+    });
+
+    const products = this.mapper.mapArray(
+      items,
+      ProductEntity,
+      ProductResponseDto,
+    );
+
+    return new PageDto(products, pageMetaDto);
   }
 
   async findById(id: string) {

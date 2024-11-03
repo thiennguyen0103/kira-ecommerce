@@ -10,10 +10,16 @@ import {
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { ProductResponseDto } from 'src/product/dto/product-response.dto';
+import { ApiPaginatedResponse } from 'src/utils/decorators/api-paginated-response.decorator';
 import { Roles } from 'src/utils/decorators/role.decorator';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -40,9 +46,7 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
-  @ApiOkResponse({
-    type: [ProductResponseDto],
-  })
+  @ApiPaginatedResponse(ProductResponseDto)
   @Get()
   findAll(@Query() productQuery: ProductQueryDto) {
     return this.productService.findAll(productQuery);
