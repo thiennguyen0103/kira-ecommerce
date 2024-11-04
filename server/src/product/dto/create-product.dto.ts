@@ -43,6 +43,13 @@ export class CreateProductDto {
   price: number;
 
   @ApiProperty({
+    type: Number,
+    example: 100,
+  })
+  @IsNumber()
+  stock: number;
+
+  @ApiProperty({
     type: String,
     required: true,
   })

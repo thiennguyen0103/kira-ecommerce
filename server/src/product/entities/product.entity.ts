@@ -49,6 +49,13 @@ export class ProductEntity extends AbstractEntity {
   })
   rating: number;
 
+  @AutoMap()
+  @Column({
+    type: Number,
+    default: 0,
+  })
+  stock: number;
+
   @Column({
     type: 'uuid',
   })

@@ -50,6 +50,14 @@ export class ProductResponseDto {
     type: Number,
   })
   @IsNumber()
+  @Type(() => Number)
+  stock: number;
+
+  @AutoMap()
+  @ApiResponseProperty({
+    type: Number,
+  })
+  @IsNumber()
   rating: number;
 
   @AutoMap(() => SubcategoryResponseDto)
