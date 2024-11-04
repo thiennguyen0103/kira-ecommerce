@@ -1,3 +1,5 @@
+import { OrderEnum } from "@/enums/order.enum";
+
 type Product = {
   id: stirng;
   name: string;
@@ -13,6 +15,11 @@ type Product = {
   deletedAt: string | null;
 };
 
+type ProductSortBy = "pop" | "ctime" | "sales" | "price";
+
 type ProductQuery = {
-  search?: string;
-};
+  q?: string;
+  c?: string;
+  sortBy?: ProductSortBy;
+  order?: OrderEnum;
+} & PageOptions;

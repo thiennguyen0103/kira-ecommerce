@@ -1,3 +1,4 @@
+import { Product } from "@/@types/product";
 import { convertVnd } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +19,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className="relative rounded-xl bg-[#fafafa]">
       {/* Badge */}
-      {/* <div className="absolute left-0 top-5 bg-red-500 px-2.5 py-1 text-sm font-bold text-white">
-        Hot
-      </div> */}
       <Badge className="absolute left-2 top-2 bg-red-500 font-bold text-white">
         Hot
       </Badge>
@@ -35,34 +33,31 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
       {/* Product details */}
-      <div className="p-[30px]">
+      <div className="h-[270px] p-[30px]">
         {/* Category */}
-        <span className="mb-[18px] block text-xs font-bold uppercase text-[#ccc]">
-          Áo Thun
+        <span className="mb-4 block text-xs font-bold uppercase text-[#ccc]">
+          {product?.subcategory.name}
         </span>
         {/* Product name */}
         <h4>
           <Link
             href={"/"}
-            className="mb-[18px] line-clamp-2 text-ellipsis font-bold uppercase text-[#363636] duration-300 hover:text-primary"
+            className="mb-4 line-clamp-2 text-ellipsis font-bold uppercase text-[#363636] duration-300 hover:text-primary"
           >
-            Áo thun phong cách
+            {product?.name} Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, beatae voluptatem laborum dolores quo reiciendis. Sapiente quaerat, ipsum recusandae at deserunt rerum natus neque officiis odit ea nisi exercitationem rem.
           </Link>
         </h4>
-        <p className="line-clamp-3 text-ellipsis">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam labore
-          doloremque, dicta debitis quis facilis fugit! Numquam, tenetur libero?
-          Repellendus eum ut obcaecati temporibus, illum numquam libero sit
-          molestiae rerum?
+        <p className="line-clamp-2 text-ellipsis text-sm text-muted-foreground">
+          {product?.description} Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi sequi magnam expedita nihil veniam autem hic harum, similique odit dolorem vel aliquid repellendus accusamus quas vero voluptate. Accusantium, delectus placeat!
         </p>
         {/* Product detail bottom */}
-        <div className="flex flex-col gap-2 border-t-[#eee] pt-5">
+        <div className="flex flex-col gap-2 border-t-[#eee] pt-4">
           <div className="flex flex-col gap-1 text-[18px]">
-            <small className="text-[80%] font-semibold text-red-500 line-through">
-              {convertVnd(200000)}
-            </small>
+            {/* <small className="text-[80%] font-semibold text-red-500 line-through">
+              {product?.price ? convertVnd(product.price) : null}
+            </small> */}
             <small className="text-[18px] font-bold text-primary">
-              {convertVnd(180000)}
+              {product?.price ? convertVnd(product.price) : null}
             </small>
           </div>
           <div className="flex items-center justify-end gap-4">
