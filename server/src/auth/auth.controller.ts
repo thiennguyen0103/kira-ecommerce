@@ -1,13 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
 import { Roles } from 'src/utils/decorators/role.decorator';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
@@ -49,5 +53,25 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   registerAdmin(@Body() authRegisterDto: AuthRegisterDto) {
     return this.authService.register(authRegisterDto, RoleEnum.Admin);
+  }
+
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @ApiOkResponse({
+    type: UserResponseDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  @HttpCode(HttpStatus.OK)
+  me(@Req() req) {
+    return this.authService.me(req.user?.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(res);
   }
 }

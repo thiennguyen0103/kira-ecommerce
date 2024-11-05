@@ -11,14 +11,13 @@ import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { RoleResponseDto } from 'src/role/dto/role-response.dto';
 import { RoleEntity } from 'src/role/entities/role.entity';
-import { RoleRepository } from 'src/role/role.repository';
+import { RoleService } from 'src/role/role.service';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { RoleEnum } from 'src/utils/enums/roles.enum';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
-import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class AuthService {
@@ -95,6 +94,17 @@ export class AuthService {
       tokenExpires,
       user: this.mapper.map(user, UserEntity, UserResponseDto),
     };
+  }
+
+  async me(userId: string) {
+    const user = await this.userService.findById(userId);
+    return user;
+  }
+
+  async logout(res: Response) {
+    // TODO: remove token
+    res.clearCookie('accessToken', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/' });
   }
 
   private async getTokensData(data: { id: string; role: RoleEntity }) {
