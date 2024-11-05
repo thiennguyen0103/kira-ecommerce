@@ -63,7 +63,7 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="hidden h-8 w-8 md:flex md:h-10 md:w-10 md:-mr-3"
+            className="hidden h-8 w-8 md:-mr-3 md:flex md:h-10 md:w-10"
             asChild
           >
             <Link href={"/login"}>
