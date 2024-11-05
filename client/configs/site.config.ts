@@ -1,4 +1,22 @@
+import { SettingsIcon, UserIcon } from "lucide-react";
+
 export const siteConfig = {
+  header: {
+    account: [
+      {
+        id: "profile",
+        path: "/account/me",
+        title: "Tài khoản của tôi",
+        icon: UserIcon,
+      },
+      {
+        id: "settings",
+        path: "/account/settings",
+        title: "Cài đặt",
+        icon: SettingsIcon,
+      },
+    ],
+  },
   footer: [
     {
       id: "company",

@@ -13,17 +13,18 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import ButtonSubmit from "../button-submit";
 import CustomFormField, { FormFieldType } from "../custom-form-field";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Icons } from "../icons";
+import
+  {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "../ui/card";
 import { Form } from "../ui/form";
 import { ToastAction } from "../ui/toast";
-import { Icons } from "../icons";
 
 const RegisterForm = () => {
   const { toast } = useToast();
@@ -70,18 +71,18 @@ const RegisterForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Create an account</CardTitle>
+            <CardTitle>Tạo tài khoản</CardTitle>
             <CardDescription>
-              Enter your email below to create your account
+              Nhập email và mật khẩu của bạn để tạo tài khoản mới
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <CustomFormField
               fieldType={FormFieldType.INPUT}
               control={form.control}
-              name="lastName"
-              label="Last Name"
-              placeholder="Last name"
+              name="name"
+              label="Họ tên"
+              placeholder="Nhập họ và tên..."
               isLoading={isLoading}
             />
             <CustomFormField
@@ -89,23 +90,23 @@ const RegisterForm = () => {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="Enter your email..."
+              placeholder="Nhập email..."
               isLoading={isLoading}
             />
             <CustomFormField
               fieldType={FormFieldType.PASSWORD_INPUT}
               control={form.control}
-              label="Password"
+              label="Mật khẩu"
               name="password"
-              placeholder="Enter your password..."
+              placeholder="Nhập mật khẩu..."
               isLoading={isLoading}
             />
             <CustomFormField
               fieldType={FormFieldType.PASSWORD_INPUT}
               control={form.control}
-              label="Confirm Password"
+              label="Nhập lại mật khẩu"
               name="confirmPassword"
-              placeholder="Enter your password..."
+              placeholder="Nhập lại mật khẩu..."
               isLoading={isLoading}
             />
           </CardContent>
@@ -115,15 +116,15 @@ const RegisterForm = () => {
               type="submit"
               className="w-full"
             >
-              Register
+              Đăng ký
             </ButtonSubmit>
             <div>
-              <span>Already have an account?</span>{" "}
+              <span>Bạn đã có tài khoản?</span>{" "}
               <Link
                 href="/login"
                 className="font-medium hover:text-primary hover:underline"
               >
-                Sign in
+                Đăng nhập
               </Link>
             </div>
             <div className="flex w-full items-center gap-4">
@@ -136,7 +137,7 @@ const RegisterForm = () => {
                 <Icons.googleIcon className="text-white" />
               </div>
               <div className="flex w-full cursor-pointer items-center justify-center rounded-md bg-blue-700 p-2 shadow-lg hover:bg-blue-700/90">
-                <Icons.facebook className="text-white" />
+                <Icons.facebookIcon className="text-white" />
               </div>
             </div>
           </CardFooter>

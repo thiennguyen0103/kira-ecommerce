@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Mulish } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
+import { AuthProvider } from "@/providers/auth-provider";
 
 const mulish = Mulish({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({
       >
         <Suspense fallback={<Loading />}>
           <TanstackQueryProvider>
-            {children}
+            <AuthProvider>{children}</AuthProvider>
           </TanstackQueryProvider>
           <Toaster />
         </Suspense>

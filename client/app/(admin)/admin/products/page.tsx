@@ -1,5 +1,6 @@
 "use client";
 
+import { Product } from "@/@types/product";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";

@@ -1,15 +1,15 @@
 import { User } from "./user";
 
-export type RegisterPayload = {
+type RegisterPayload = {
   name: string;
 } & LoginPayload;
 
-export type LoginPayload = {
+type LoginPayload = {
   email: string;
   password: string;
 };
 
-export type AuthResponse = {
+type Auth = {
   token: string;
   refreshToken: string;
   tokenExpires: number;

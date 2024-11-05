@@ -18,7 +18,7 @@ const NewArrivals = async () => {
   const queryClient = new QueryClient();
 
   const data = await queryClient.fetchQuery({
-    queryKey: ["get-jobs"],
+    queryKey: ["get-new-arrival-products"],
     queryFn: async () => {
       try {
         const response = await productService.getProductList({

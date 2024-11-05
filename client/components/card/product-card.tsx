@@ -44,11 +44,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             href={"/"}
             className="mb-4 line-clamp-2 text-ellipsis font-bold uppercase text-[#363636] duration-300 hover:text-primary"
           >
-            {product?.name} Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, beatae voluptatem laborum dolores quo reiciendis. Sapiente quaerat, ipsum recusandae at deserunt rerum natus neque officiis odit ea nisi exercitationem rem.
+            {product?.name}
           </Link>
         </h4>
         <p className="line-clamp-2 text-ellipsis text-sm text-muted-foreground">
-          {product?.description} Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi sequi magnam expedita nihil veniam autem hic harum, similique odit dolorem vel aliquid repellendus accusamus quas vero voluptate. Accusantium, delectus placeat!
+          {product?.description}
         </p>
         {/* Product detail bottom */}
         <div className="flex flex-col gap-2 border-t-[#eee] pt-4">

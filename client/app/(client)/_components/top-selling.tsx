@@ -18,7 +18,7 @@ const TopSelling = async () => {
   const queryClient = new QueryClient();
 
   const data = await queryClient.fetchQuery({
-    queryKey: ["get-jobs"],
+    queryKey: ["get-top-selling-products"],
     queryFn: async () => {
       try {
         const response = await productService.getProductList({
@@ -30,7 +30,7 @@ const TopSelling = async () => {
   });
 
   return (
-    <Section title="Sản phẩm mới">
+    <Section title="Bán chạy">
       <Carousel
         opts={{
           loop: true,
@@ -49,8 +49,8 @@ const TopSelling = async () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        {/* <CarouselPrevious />
-        <CarouselNext /> */}
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
       <div className="mt-4 flex w-full items-center justify-center">
         <Button

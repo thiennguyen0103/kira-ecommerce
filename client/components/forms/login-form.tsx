@@ -4,6 +4,7 @@ import { LoginPayload } from "@/@types/auth";
 import { LoginFormValues } from "@/constants/form-values";
 import { useToast } from "@/hooks/use-toast";
 import { LoginFormValidation } from "@/lib/validation";
+import { authService } from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
@@ -34,14 +35,16 @@ const LoginForm = () => {
   });
 
   const { mutate: login, isPending: isLoading } = useMutation({
-    mutationKey: ["register"],
+    mutationKey: ["login"],
     mutationFn: async (values: LoginPayload) => {
       console.log(values);
+      const response = await authService.login(values);
+      return response.data;
     },
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Login successfully",
+        description: "Đăng nhập thành công",
       });
       router.push("/");
     },
@@ -64,9 +67,9 @@ const LoginForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>Đăng nhập</CardTitle>
             <CardDescription>
-              Please enter your username and password to login.
+              Vui lòng điền email và mật khẩu của bạn để đăng nhập
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -75,15 +78,15 @@ const LoginForm = () => {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="Enter your email..."
+              placeholder="Nhập email..."
               isLoading={isLoading}
             />
             <CustomFormField
               fieldType={FormFieldType.PASSWORD_INPUT}
               control={form.control}
-              label="Password"
+              label="Mật khẩu"
               name="password"
-              placeholder="Enter your password..."
+              placeholder="Nhập mật khẩu..."
               isLoading={isLoading}
             />
           </CardContent>
@@ -93,20 +96,20 @@ const LoginForm = () => {
               type="submit"
               className="w-full"
             >
-              Login
+              Đăng nhập
             </ButtonSubmit>
             <div>
-              <span>Don&apos;t have an account?</span>{" "}
+              <span>Bạn chưa có tài khoản?</span>{" "}
               <Link
                 href="/register"
                 className="font-medium hover:text-primary hover:underline"
               >
-                Sign up
+                Đăng ký
               </Link>
             </div>
             <div className="flex w-full items-center gap-4">
               <div className="h-[1px] w-[45%] bg-slate-700" />
-              <div>Or</div>
+              <div>Hoặc</div>
               <div className="h-[1px] w-[45%] bg-slate-700" />
             </div>
             <div className="flex w-full items-center gap-4">

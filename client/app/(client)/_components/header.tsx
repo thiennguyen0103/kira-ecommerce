@@ -4,13 +4,16 @@ import Logo from "@/components/logo";
 import { MobileToggle } from "@/components/mobile-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ShoppingCart, User } from "lucide-react";
+import { useAuthStore } from "@/store/auth-store";
+import { ShoppingCartIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HeaderNav from "./header-nav";
 import Search from "./search";
+import UserDropdown from "./user-dropdown";
 
 const Header = () => {
+  const { isLoggedIn } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -57,19 +60,25 @@ const Header = () => {
             asChild
           >
             <Link href="/cart">
-              <ShoppingCart />
+              <ShoppingCartIcon />
             </Link>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden h-8 w-8 md:-mr-3 md:flex md:h-10 md:w-10"
-            asChild
-          >
-            <Link href={"/login"}>
-              <User />
-            </Link>
-          </Button>
+          <div className="hidden md:block">
+            {isLoggedIn ? (
+              <UserDropdown />
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 md:-mr-3 md:h-10 md:w-10"
+                asChild
+              >
+                <Link href={"/login"}>
+                  <UserIcon />
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </header>

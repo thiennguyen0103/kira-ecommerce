@@ -13,7 +13,7 @@ export default class ApiClient {
 
   static async post<T>(
     url: string,
-    data: object,
+    data?: object,
     params?: object,
   ): Promise<AxiosResponse<T>> {
     const requestUrl = params ? `${url}?${queryString.stringify(params)}` : url;

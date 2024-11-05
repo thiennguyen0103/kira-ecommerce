@@ -1,17 +1,19 @@
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import
+  {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+  } from "@/components/ui/hover-card";
+import
+  {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+    navigationMenuTriggerStyle,
+  } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { categoryService } from "@/services/category.service";
 import { useQuery } from "@tanstack/react-query";
@@ -24,10 +26,10 @@ export default function HeaderNav() {
     queryFn: async () => {
       try {
         const response = await categoryService.getCategories();
-        // console.log(response?.data);
         return response.data;
       } catch (error) {}
     },
+    retry: false,
   });
 
   return (
