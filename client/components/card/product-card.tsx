@@ -17,13 +17,16 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <div className="relative rounded-xl bg-[#fafafa]">
+    <Link
+      href={`/san-pham-moi`}
+      className="relative block rounded-xl bg-[#fafafa]"
+    >
       {/* Badge */}
       <Badge className="absolute left-2 top-2 bg-red-500 font-bold text-white">
         Hot
       </Badge>
       {/* Image thumb */}
-      <div className="flex h-[300px] items-center justify-center">
+      <div className="flex h-[200px] w-full items-center justify-center">
         <Image
           src="https://theme.hstatic.net/1000197303/1001046599/14/slideshow_1.jpg?v=9956"
           alt="banner"
@@ -33,34 +36,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
       {/* Product details */}
-      <div className="h-[270px] p-[30px]">
-        {/* Category */}
-        <span className="mb-4 block text-xs font-bold uppercase text-[#ccc]">
-          {product?.subcategory.name}
-        </span>
-        {/* Product name */}
-        <h4>
-          <Link
-            href={"/"}
-            className="mb-4 line-clamp-2 text-ellipsis font-bold uppercase text-[#363636] duration-300 hover:text-primary"
-          >
+      <div className="flex flex-col justify-between gap-3 p-4">
+        <div className="space-y-2">
+          {/* Category */}
+          <span className="block text-xs font-bold uppercase text-muted-foreground">
+            {product?.subcategory.name}
+          </span>
+          {/* Product name */}
+          <h4 className="line-clamp-2 h-10 text-ellipsis font-bold uppercase leading-5 duration-300 hover:text-primary">
             {product?.name}
-          </Link>
-        </h4>
-        <p className="line-clamp-2 text-ellipsis text-sm text-muted-foreground">
-          {product?.description}
-        </p>
+          </h4>
+        </div>
         {/* Product detail bottom */}
-        <div className="flex flex-col gap-2 border-t-[#eee] pt-4">
-          <div className="flex flex-col gap-1 text-[18px]">
-            {/* <small className="text-[80%] font-semibold text-red-500 line-through">
+        <div>
+          <div className="flex flex-col">
+            <small className="h-full max-h-4 text-xs font-semibold text-red-500 line-through">
               {product?.price ? convertVnd(product.price) : null}
-            </small> */}
-            <small className="text-[18px] font-bold text-primary">
+            </small>
+            <small className="text-lg font-bold text-primary">
               {product?.price ? convertVnd(product.price) : null}
             </small>
           </div>
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center justify-end gap-2">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -75,7 +72,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
-                    <Icons.cart className="cursor-pointer text-[#e1e1e1] duration-300 hover:text-primary" />
+                    <Icons.cart className="h-8! w-8! cursor-pointer text-[#e1e1e1] duration-300 hover:text-primary" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -86,7 +83,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

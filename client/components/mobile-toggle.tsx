@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { categoryService } from "@/services/category.service";
+import { useAuthStore } from "@/store/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
@@ -23,6 +24,7 @@ import { Separator } from "./ui/separator";
 import { UserAvatar } from "./user-avatar";
 
 export const MobileToggle = () => {
+  const { isLoggedIn, user } = useAuthStore();
   const { data: categories } = useQuery({
     queryKey: ["get-categories"],
     queryFn: async () => {
@@ -43,21 +45,30 @@ export const MobileToggle = () => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className="w-full">
         <SheetHeader>
           <SheetTitle />
           <SheetDescription />
         </SheetHeader>
         <div className="flex h-full flex-col space-y-4">
-          <div className="flex gap-4">
+          <Link href={"/account/me"} className="flex items-center gap-4">
             <UserAvatar />
             <div className="flex flex-col">
-              <Link href={"/login"}>Tài khoản</Link>
-              <small>
-                <Link href={"/login"}>Đăng nhập</Link>
-              </small>
+              {isLoggedIn ? (
+                <>
+                  <h3 className="font-bold">{user?.name}</h3>
+                  <small>{user?.email}</small>
+                </>
+              ) : (
+                <>
+                  <Link href={"/login"}>Tài khoản</Link>
+                  <small>
+                    <Link href={"/login"}>Đăng nhập</Link>
+                  </small>
+                </>
+              )}
             </div>
-          </div>
+          </Link>
           <Separator />
           <ScrollArea className="scrollbar-hide w-full flex-1" type="scroll">
             <Accordion type="multiple" className="w-full pr-2">
