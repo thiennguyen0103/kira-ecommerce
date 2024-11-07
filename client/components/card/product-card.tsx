@@ -18,7 +18,7 @@ type ProductCardProps = {
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Link
-      href={`/san-pham-moi`}
+      href={`/san-pham/${product?.slug}`}
       className="relative block rounded-xl bg-[#fafafa]"
     >
       {/* Badge */}

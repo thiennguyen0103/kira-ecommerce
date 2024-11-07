@@ -25,33 +25,37 @@ const NewArrivals = async () => {
           sortBy: "ctime",
         });
         return response.data;
-      } catch (error) {}
+      } catch (error) {
+        return null;
+      }
     },
   });
 
   return (
     <Section title="Sản phẩm mới">
-      <Carousel
-        opts={{
-          loop: true,
-          align: "start",
-        }}
-        autoplay={true}
-        autoplayInterval={3000}
-      >
-        <CarouselContent>
-          {data?.data.map((product) => (
-            <CarouselItem
-              key={product.id}
-              className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-            >
-              <ProductCard product={product} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      {data ? (
+        <Carousel
+          opts={{
+            loop: true,
+            align: "start",
+          }}
+          autoplay={true}
+          autoplayInterval={3000}
+        >
+          <CarouselContent>
+            {data?.data.map((product) => (
+              <CarouselItem
+                key={product.id}
+                className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+              >
+                <ProductCard product={product} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      ) : null}
       <div className="mt-4 flex w-full items-center justify-center">
         <Button
           variant="outline"

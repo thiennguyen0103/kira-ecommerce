@@ -14,16 +14,14 @@ import { productService } from "@/services/product.service";
 import { QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
-const TopSelling = async () => {
+const SimilarProducts = async () => {
   const queryClient = new QueryClient();
 
   const data = await queryClient.fetchQuery({
-    queryKey: ["get-top-selling-products"],
+    queryKey: ["similar-products"],
     queryFn: async () => {
       try {
-        const response = await productService.getProductList({
-          sortBy: "ctime",
-        });
+        const response = await productService.getProductList();
         return response.data;
       } catch (error) {
         return null;
@@ -32,7 +30,7 @@ const TopSelling = async () => {
   });
 
   return (
-    <Section title="Bán chạy">
+    <Section title="Sản phẩm tương tự">
       {data ? (
         <Carousel
           opts={{
@@ -68,4 +66,4 @@ const TopSelling = async () => {
   );
 };
 
-export default TopSelling;
+export default SimilarProducts;

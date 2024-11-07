@@ -11,12 +11,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useQuery({
-    queryKey: ["me", router],
+    queryKey: ["me"],
     queryFn: async () => {
-      const response = await authService.me();
-      setUser(response.data);
-      if (!response.data) {
-        router.push("/login");
+      try {
+        const response = await authService.me();
+        setUser(response.data);
+        if (!response.data) {
+          router.push("/login");
+        }
+        return response.data;
+      } catch (error) {
+        return null;
       }
     },
     retry: false,
