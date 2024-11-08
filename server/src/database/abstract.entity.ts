@@ -16,11 +16,9 @@ export class AbstractEntity extends BaseEntity {
   setEntityName() {
     this.__entity = this.constructor.name;
   }
-
   toJSON() {
     return instanceToPlain(this);
   }
-
   @AutoMap()
   @PrimaryGeneratedColumn('uuid')
   id: string;

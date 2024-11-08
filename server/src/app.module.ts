@@ -9,6 +9,7 @@ import { CategoryModule } from './category/category.module';
 import { CityModule } from './city/city.module';
 import { DatabaseModule } from './database/database.module';
 import { DistrictModule } from './district/district.module';
+import { FileModule } from './file/file.module';
 import { LoggerModule } from './logger/logger.module';
 import { OrderItemModule } from './order-item/order-item.module';
 import { OrderModule } from './order/order.module';
@@ -25,13 +26,14 @@ import { WardModule } from './ward/ward.module';
 import authConfig from './auth/config/auth.config';
 import appConfig from './config/app-config';
 import databaseConfig from './database/config/database-config';
+import fileConfig from './file/config/file-config';
 import paymentConfig from './payment/config/payment-config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, authConfig, paymentConfig],
+      load: [appConfig, databaseConfig, authConfig, paymentConfig, fileConfig],
       envFilePath: ['.env'],
     }),
     AutomapperModule.forRoot({
@@ -56,6 +58,7 @@ import paymentConfig from './payment/config/payment-config';
     WardModule,
     DistrictModule,
     CityModule,
+    FileModule,
   ],
 })
 export class AppModule {}
